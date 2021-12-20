@@ -23,3 +23,4 @@ package.json裡的scripts改成
         "@babel/preset-env"
     ]
 }
+///檔案怎麼塞請參考結構圖///
