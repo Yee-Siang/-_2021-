@@ -22,6 +22,7 @@ function MemoApi(app) {
             res.json({UserID:user, Todo:todo, Day:date, message:"Repeated Todo"});
         }
     });
+
     app.post("/api/allTodo", async(req, res) => {
         console.log("receive a all Todo post");
         console.log(req.body);
@@ -34,6 +35,20 @@ function MemoApi(app) {
         }
         else {
             res.json({Todos:existing.map(t => ({UserID:t.UserID, Todo:t.Todo, Day:t.Day, message:"Success"})), message:"Have Todo"});
+        }
+    });
+
+    app.post("/api/clearAllTodos", async(req, res) => {
+        console.log("receive a clear all Todo post");
+        console.log(req.body);
+        const {user} = req.body;
+        try {
+            await Todo.deleteMany({UserID:user});
+            console.log("Database deleted");
+            res.json({message:"clear all success"});
+        } catch (e) {
+            res.json({message:"clear all fail"});
+            throw new Error("Database deletion failed"); 
         }
     });
 }

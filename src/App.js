@@ -98,6 +98,13 @@ function App() {
 
   /* 當前使用者的所有記帳紀錄 */
   const [MyCost, setMyCost] = useState([]);
+  /* 當前使用者的所有備忘錄 */
+  const [MemoData, setMemoData] = useState([]);
+  const resetTodo = async (UserID) => {
+    const {data} = await axios.post("/api/allTodo", {user: UserID});
+    console.log("Todos: ",data.Todos);
+    setMemoData(data.Todos);
+  }
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -159,6 +166,9 @@ function App() {
       setSystemMessage("Login success!!");
       setSystemDescription(Message);
       setSystemMessageType("success");
+      //query todos
+      resetTodo(UserID);
+
     } else {
       setSystemMessage("Login failed!!");
       setSystemDescription(Message);
@@ -576,12 +586,12 @@ function App() {
       </Descriptions>
     </Layout.Content>
   );
-
+  
   //備忘錄頁面
   const MemoPage = (
     <Layout.Content>
       <p>This is Memo Page</p>
-      <Memo user={NowUserID} axios={axios}></Memo>
+      <Memo user={NowUserID} axios={axios} data={MemoData}></Memo>
     </Layout.Content>
   );
 

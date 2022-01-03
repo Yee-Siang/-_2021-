@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "antd/dist/antd.css";
-import {Input, DatePicker, Button, Space, Table} from "antd";
+import {Input, DatePicker, Button, Space, Table, message} from "antd";
 
 const MonthToNumber = (Month) => {
     if (Month === "Jan") {
@@ -45,18 +45,13 @@ const MonthToNumber = (Month) => {
 function Memo(props) {
     const user = props.user;
     const axios = props.axios;
+    //console.log(props.data);
 
     const [newTodo, setNewTodo] = useState("");
     const [newDate, setNewDate] = useState([]);
-    const [todos, setTodos] = useState([]);
+    const [todos, setTodos] = useState(props.data);
     const [now, setNow] = useState("All");
-    //第一次進來時 query 所有 todos
-    const update = async() => {
-      const {data} = await axios.post("/api/allTodo", {user: user});
-      //console.log(data);
-      setTodos(data.Todos);
-    }
-    update();
+    
     //新增 todo
     const handleNewTodo = async () => {
         console.log(newTodo);
@@ -65,9 +60,25 @@ function Memo(props) {
         console.log(data);
         if (data.message == "Success") {
           setTodos([...todos, data]);
+          message.success("New task added");
+        }
+        else if (data.message == "Repeated Todo") {
+          message.error("This task already exists");
         }
     }
-    //顯示todo
+    //刪除所有 todos
+    const handleClearAll = async () => {
+      const {data} = await axios.post("/api/clearAllTodos", {user: user});
+      console.log(data);
+      if (data.message == "clear all success") {
+        setTodos([]);
+        message.success("Clear all success")
+      }
+      else {
+        message.error("Clear tasks failed")
+      }
+    }
+    //顯示 todo
     const dataSource = todos.map((t, i) => ({task: t.Todo, date: `${t.Day}`, state: "Active", key:i}));
     const columns = [
       {title: 'Task',dataIndex: 'task',key: 'task'},
@@ -76,28 +87,31 @@ function Memo(props) {
     ];
     return (
         <>
-            <Input.Group compact>
-                <DatePicker 
-                    style={{ width: '30%' }}
-                    onChange={(e) => {
-                        console.log(String(e))
-                        e?
-                        setNewDate([String(e).split(" ")[3], MonthToNumber(String(e).split(" ")[1]), String(e).split(" ")[2],]):
-                        setNewDate(["", "", ""])
-                    }}/>
-                <Input.Search 
-                    style={{ width: '70%' }}
-                    placeholder="Type yous task here"
-                    onSearch={handleNewTodo}
-                    onChange={(e) => {setNewTodo(e.target.value)}}
-                    enterButton="Add"/>
-            </Input.Group>
-            <Space>
-                <Button type="primary" style={{ width: '10rem' }} onClick={update}>All</Button>
-                <Button type="primary" style={{ width: '10rem' }}>Active</Button>
-                <Button type="primary" style={{ width: '10rem' }}>Complete</Button>
-            </Space>
-            <Table dataSource={dataSource} columns={columns} />;
+          <Input.Group compact>
+              <DatePicker 
+                style={{ width: '30%' }}
+                onChange={(e) => {
+                    console.log(String(e))
+                    e?
+                    setNewDate([String(e).split(" ")[3], MonthToNumber(String(e).split(" ")[1]), String(e).split(" ")[2],]):
+                    setNewDate(["", "", ""])
+                }}/>
+              <Input.Search
+                value={newTodo}
+                style={{ width: '70%' }}
+                placeholder="Type yous task here"
+                onSearch={(e) => {handleNewTodo();setNewTodo("")}}
+                onChange={(e) => {setNewTodo(e.target.value)}}
+                enterButton="Add"/>
+          </Input.Group>
+          <Space>
+            <Button type="primary" style={{ width: '8rem' }} onClick={() => {setNow("All");}}>All</Button>
+            <Button type="primary" style={{ width: '8rem' }} onClick={() => {setNow("Active");}}>Active</Button>
+            <Button type="primary" style={{ width: '8rem' }} onClick={() => {setNow("Complete");}}>Complete</Button>
+            <Button type="primary" style={{ width: '8rem' }}>Clear Complete</Button>
+            <Button type="primary" style={{ width: '8rem' }} onClick={handleClearAll}>Clear All</Button>
+          </Space>
+          <Table dataSource={dataSource} columns={columns}/>;
         </>
     )
 }
