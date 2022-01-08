@@ -26,3 +26,4 @@ package.json裡的scripts改成
 
 11/21 登入註冊功能
 11/22 新增改密碼功能，User 新增Nickname,School資料
+1/7   完成提醒事項功能
