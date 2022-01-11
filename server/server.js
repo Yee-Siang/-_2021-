@@ -8,7 +8,7 @@ import bodyParser from "body-parser";
 import User from "../model/user.js";
 import Cost from "../model/cost.js";
 import MemoApi from "./MemoBackend";
-
+import learningApi from "./LearningBackend";
 ///////////////////////////////////////////////////////////////////////////////
 
 /* 連接資料庫 */
@@ -44,7 +44,9 @@ db.once("open", () => {
 /* 代辦事項的 api */
 MemoApi(app);
 ///////////////////////////////////////////////////////////////////////////////
-
+/* 學習功能的 api */
+learningApi(app);
+///////////////////////////////////////////////////////////////////////////////
 /* 註冊新用戶(3/4) */
 app.post("/api/CreateNewUser", async (req, res) => {
   let SignupUserID = req.body.SignupUserID;

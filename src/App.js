@@ -38,6 +38,7 @@ import axios from "./api";
 import moment from "moment";
 import { sum } from "lodash";
 import Memo from "./memo"
+import Learning from "./learning";
 
 function App() {
   ///////////////////////////////////////////////////////////////////////////////
@@ -102,8 +103,15 @@ function App() {
   const [MemoData, setMemoData] = useState([]);
   const resetTodo = async (UserID) => {
     const {data} = await axios.post("/api/allTodo", {user: UserID});
-    console.log("Todos: ",data.Todos);
+    console.log("Todos: ", data.Todos);
     setMemoData(data.Todos);
+  }
+  /* 當前使用者的所有單字 */
+  const [WordData, setWordData] = useState([]);
+  const resetWord = async (UserID) => {
+    const {data} = await axios.post("/api/allWord", {user: UserID});
+    console.log("Words: ", data.words);
+    setWordData(data.words);
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -168,6 +176,8 @@ function App() {
       setSystemMessageType("success");
       //query todos
       resetTodo(UserID);
+      //query words
+      resetWord(UserID);
 
     } else {
       setSystemMessage("Login failed!!");
@@ -779,6 +789,7 @@ function App() {
   const LearningPage = (
     <Layout.Content>
       <p>This is Learning Page</p>
+      <Learning user={NowUserID} axios={axios} data={WordData}></Learning>
     </Layout.Content>
   );
 
