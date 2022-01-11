@@ -116,6 +116,7 @@ function Memo(props) {
   return (
     <>
       <Input.Group compact>
+        
         <DatePicker 
           style={{ width: '30%' }}
           onChange={(e) => {
@@ -137,7 +138,7 @@ function Memo(props) {
         <Button type="primary" style={{ width: '8rem' }} onClick={() =>{handleClear("Complete")}}>Clear Complete</Button>
         <Button type="primary" style={{ width: '8rem' }} onClick={() =>{handleClear("All")}}>Clear All</Button>
       </Space>
-      <Table dataSource={dataSource} columns={columns} pagination={{pageSize: 6}}/>;
+      <Table dataSource={dataSource} columns={columns} pagination={{pageSize: 6}}/>
     </>
   )
 }
