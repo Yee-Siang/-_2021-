@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "antd/dist/antd.css";
-import {Input, DatePicker, Button, Space, Table, message, Tag, Tabs} from "antd";
+import {Input, Button, Space, Table, message, Modal, Radio} from "antd";
 import {CheckCircleOutlined, ClockCircleOutlined, DeleteOutlined} from "@ant-design/icons";
 
 const data_test = [
@@ -26,10 +26,121 @@ function Learning(props) {
   const [find, setFind] = useState();
   const [newWord, setNewWord] = useState("");
   const [newAnswer, setNewAnswer] = useState("");
-  //進入測驗功能時的初始化
+  //////////////////////測驗功能//////////////////////
+  //測驗題目數
+  const [problemsNum, setProblemsNum] = useState(5);
+  //是否彈出選擇測驗題目數量視窗
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  //隨機選題目
+  const [problemsList, setProblemsList] = useState([]);
+  //隨機選3個正確答案外的選項
+  const [answerList, setAnswerList] = useState([]);
+  //目前在哪一題
+  const [currentP, setCurrentP] = useState(0);
+  const [p, setP] = useState("");
+  //選擇的答案
+  const [choosenAns, setChoosenAns] = useState(0);
+  const [score, setScore] = useState(0);
+  //是否彈出測驗結束視窗
+  const [isModalVisible_2, setIsModalVisible_2] = useState(false);
   const handleTest = async() => {
-    setFeature("test");
+    setIsModalVisible(true);
   }
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    if (problemsNum > allData.length) {
+      message.error("Problems number out of range")
+    }
+    else {
+      //隨機選題目
+      let problemsList_temp = [];
+      while (problemsList_temp.length < problemsNum) {
+        const newNum = Math.floor(Math.random()*allData.length);
+        if (!problemsList_temp.includes(newNum)) {
+          problemsList_temp.push(newNum);
+        }
+      }
+      setProblemsList(problemsList_temp);
+      console.log(problemsList_temp);
+      setP(allData[problemsList_temp[0]].word);
+      //隨機選答案
+      let ans_temp = [problemsList_temp[0]];
+      while (ans_temp.length < 4) {
+        const newNum = Math.floor(Math.random()*allData.length);
+        if (!ans_temp.includes(newNum)) {
+          ans_temp.push(newNum);
+        }
+      }
+      setAnswerList(ans_temp.sort());
+      setFeature("test");
+      setCurrentP(0);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  //測驗結束視窗的按鈕
+  const handleCancel_2 = () => {
+    setScore(0);
+    setIsModalVisible_2(false);
+    setFeature("dictionary");
+  };
+
+  const handleOk_2 = () => {
+    setScore(0);
+    setIsModalVisible_2(false);
+    handleOk();
+  }
+
+  const handleSubmit = () => {
+    if (currentP < problemsNum-1) {
+      if (choosenAns == problemsList[currentP]) {
+        message.success("Correct!");
+        setScore(score + 1);
+      }
+      else {
+        message.error(`Sorry, the answer is ${allData[problemsList[currentP]].answer}`);
+      }
+      setCurrentP(currentP + 1);
+      //console.log(problemsList[currentP+1]);
+      setP(allData[problemsList[currentP+1]].word);
+      //隨機選答案
+      let ans_temp = [problemsList[currentP+1]];
+      while (ans_temp.length < 4) {
+        const newNum = Math.floor(Math.random()*allData.length);
+        if (!ans_temp.includes(newNum)) {
+          ans_temp.push(newNum);
+        }
+      }
+      setAnswerList(ans_temp.sort());
+    }
+    else if (currentP == problemsNum-1) {
+      if (choosenAns == problemsList[currentP]) {
+        message.success("Correct!");
+        setScore(score + 1);
+      }
+      else {
+        message.error(`Sorry, the answer is ${allData[problemsList[currentP]].answer}`);
+      }
+      setIsModalVisible_2(true);
+    }
+    setChoosenAns(-1);
+  };
+  const test = (
+    <>
+      <h1 style={{marginLeft: "1rem"}}>What does {p} mean ?</h1>
+      <Radio.Group name="radiogroup" value={choosenAns} style={{marginLeft: "1rem"}} onChange={(e) => {setChoosenAns(e.target.value)}}>
+        <Space direction="vertical">
+          {answerList.map((p,i) => <Radio value={p}>{allData[p].answer}</Radio>)}
+          <Button onClick={handleSubmit}>Submit</Button>
+        </Space>
+      </Radio.Group>
+      
+    </>
+  )
+  ////////////////////////////////////////////////////
   //搜尋單字
   const handleSearch = () => {
     const dataFilter = allData.filter((data) => {return data.word.includes(find)});
@@ -107,17 +218,19 @@ function Learning(props) {
       <Table dataSource={showData} columns={columns} pagination={{pageSize: 6}}/>
     </>
   )
-  //測驗功能頁面
-  const test = (
-    <h1>this is a test</h1>
-  )
 
   return (
     <>
       <Space style={{ width: "100%" }}>
         <Button type="primary" style={{ width: '8rem' }} onClick={() => {setFeature("dictionary")}}>Dictionary</Button>
-        <Button type="primary" style={{ width: '8rem' }} onClick={handleTest}>Test</Button>
+        <Button type="primary" style={{ width: '8rem' }} onClick={handleTest}>Quiz</Button>
       </Space>
+      <Modal title="How many problems do you want" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <Input value={problemsNum} onChange={(e) => {setProblemsNum(e.target.value)}}></Input>
+      </Modal>
+      <Modal title="Quiz finished" visible={isModalVisible_2} onOk={handleOk_2} onCancel={handleCancel_2} okText={"again!"} cancelText={"back to dictionary"}>
+        <h1>{`Congratulations! Your score is ${score}/${problemsNum}`}</h1>
+      </Modal>
       {feature=="dictionary"? dictionary: test}
     </>
   )
