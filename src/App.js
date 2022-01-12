@@ -134,6 +134,9 @@ function App() {
       setSystemMessage("Signup success!!");
       setSystemDescription("Now you can login and start エムエム😳");
       setSystemMessageType("success");
+      //初始化學習功能的字典
+      const {data} = await axios.post("/api/initWord", {user:SignupUserID});
+      console.log(data.message);
     } else {
       setSystemMessage("Signup failed!!");
       setSystemDescription(Message);

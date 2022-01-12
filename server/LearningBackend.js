@@ -1,6 +1,33 @@
 import Word from "../model/word";
 
 function learningApi(app) {
+    //創建新使用者時初始化字典
+    const init = [
+        {word: "apple", answer: "蘋果"},
+        {word: "banana", answer: "香蕉"},
+        {word: "cherry", answer: "櫻桃"},
+        {word: "coconut", answer: "椰子"},
+        {word: "grape", answer: "葡萄"},
+        {word: "lemon", answer: "檸檬"},
+        {word: "papaya", answer: "木瓜"}
+    ]
+
+    app.post("/api/initWord", async(req, res) => {
+        console.log("receive a all Word post");
+        console.log(req.body);
+        const {user} = req.body;
+        try {
+            for (let i=0; i<init.length; i++) {
+                console.log(i);
+                const newWord = await new Word({UserID: user, Word:init[i].word, Answer:init[i].answer})
+                newWord.save();
+            }
+            res.json({message:"Dictionary initial success"})
+        } catch (e) {
+            res.json({message:"Dictionary initial fail"})
+        }
+    });
+    
     app.post("/api/allWord", async(req, res) => {
         console.log("receive a all Word post");
         console.log(req.body);
