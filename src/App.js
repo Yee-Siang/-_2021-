@@ -132,7 +132,7 @@ function App() {
     console.log(Message);
     if (SignupSuccess === "true") {
       setSystemMessage("Signup success!!");
-      setSystemDescription("Now you can login and start エムエム😳");
+      setSystemDescription("Now you can login and start エムエム");
       setSystemMessageType("success");
       //初始化學習功能的字典
       const { data } = await axios.post("/api/initWord", { user: SignupUserID });
@@ -467,7 +467,7 @@ function App() {
   //已登入的主頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
   const LoginPage = (
     <Layout.Content>
-      <h1 style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Welcome back {NowUserID} Please choose the service </h1>
+      <h1 style={{ fontSize: "2rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Welcome back {NowUserID} Please choose the service </h1>
     </Layout.Content>
   );
 
@@ -609,9 +609,10 @@ function App() {
   //記帳本頁面
   const SpendingPage = (
     <Layout.Content>
-      <p>This is Spending Page</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Spending</p>
       <div>
         <Button
+          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
           onClick={() => {
             setPageState("NewCost");
             setNewCostTitle("");
@@ -629,22 +630,25 @@ function App() {
           }}
           type="danger"
         >
-          CreateNewCost
+          Create New Cost
         </Button>
       </div>
       <div /*從資料庫取得目前使用者記帳紀錄(1/4)*/>
         <Button
+          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
           onClick={() => {
             setPageState("CheckMyCost");
             handleCheckMyCost(NowUserID);
           }}
           type="primary"
         >
-          CheckMyCost
+          Check My Cost
         </Button>
       </div>
       <div /* 刪除個人所有記帳紀錄(1/4) */>
-        <Button onClick={handleDeleteMyCost} type="danger">
+        <Button
+          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
+          onClick={handleDeleteMyCost} type="danger">
           Delete My Cost
         </Button>
       </div>
@@ -1069,18 +1073,6 @@ function App() {
               </Menu.Item>
             </Menu.SubMenu>
 
-            <Menu.Item
-              onClick={() => {
-                setPageState("Chatroom");
-                setSystemMessage("This is Chatroom Page");
-                setSystemDescription("");
-                setSystemMessageType("success");
-              }}
-              key="Chatroom"
-              icon={<TeamOutlined />}
-            >
-              Chatroom
-            </Menu.Item>
             <Menu.Item
               onClick={() => {
                 setPageState("Learning");
