@@ -74,14 +74,14 @@ function App() {
   const [NewUserPassword, setNewUserPassword] = useState("");
 
   /* 顯示在底部 ( footer ) 的系統訊息和文字顏色 */
-  const [SystemMessage, setSystemMessage] = useState("Welcome to エムエム");
+  const [SystemMessage, setSystemMessage] = useState("Welcome to MM_2021alpha");
   const [SystemDescription, setSystemDescription] = useState(
     "Please login or signup first"
   );
   const [SystemMessageType, setSystemMessageType] = useState("success");
 
   /*側邊選單的Logo和收起/展開狀態，預設為展開*/
-  const [SiderLogo, setSiderLogo] = useState("🥺😳😎🥺😳😎");
+  const [SiderLogo, setSiderLogo] = useState("      ");
   const [SiderOnCollapse, setSiderOnCollapse] = useState(false);
 
   /* 新增一筆記帳時輸入的資訊*/
@@ -132,7 +132,7 @@ function App() {
     console.log(Message);
     if (SignupSuccess === "true") {
       setSystemMessage("Signup success!!");
-      setSystemDescription("Now you can login and start エムエム");
+      setSystemDescription("Now you can login and start!!");
       setSystemMessageType("success");
       //初始化學習功能的字典
       const { data } = await axios.post("/api/initWord", { user: SignupUserID });
@@ -379,10 +379,10 @@ function App() {
   const handleSiderCollapse = () => {
     if (!SiderOnCollapse) {
       setSiderOnCollapse(true);
-      setSiderLogo("🥺");
+      setSiderLogo(" ");
     } else {
       setSiderOnCollapse(false);
-      setSiderLogo("🥺😳😎🥺😳😎");
+      setSiderLogo("      ");
     }
   };
 
@@ -560,7 +560,7 @@ function App() {
             setPageState("Welcome");
             setLoginUserID("");
             setLoginUserPassword("");
-            setSystemMessage("Welcome to エムエム");
+            setSystemMessage("Welcome to MM_2021alpha");
             setSystemDescription(
               "You can login if you already have a account."
             );
@@ -576,7 +576,7 @@ function App() {
   //個人資訊頁面
   const PersonalInfoPage = (
     <Layout.Content>
-      <p>This is Personal Info Page</p>
+      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>About Myself</p>
       <Descriptions bordered column={1}>
         <Descriptions.Item label="UserId">{NowUserID}</Descriptions.Item>
         <Descriptions.Item label="Password">
@@ -798,7 +798,7 @@ function App() {
   //一般設定頁面
   const NormalSettingPage = (
     <Layout.Content>
-      <p>This is Normal Setting Page</p>
+      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Changing Personal Info</p>
       <div>
         <Button
           onClick={() => {
@@ -823,7 +823,7 @@ function App() {
   //修改個人資料頁面
   const ChangePersonalInfoPage = (
     <Layout.Content>
-      <p>This is ChangePersonalInfo Page</p>
+      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Changing Personal Info</p>
       <div /* 修改個人資料(1/4) */>
         <p>You can change your Nickname here*</p>
         <Input
@@ -865,7 +865,7 @@ function App() {
           }
           style={{ width: "500px" }}
         />
-        <p>You can change your AboutMe here</p>
+        <p>You can change your own Signature!</p>
         <Input.TextArea
           onChange={(e) => {
             setNewAboutMe(e.target.value);
@@ -888,7 +888,7 @@ function App() {
   //帳號設定頁面
   const AccountSettingPage = (
     <Layout.Content>
-      <p>This is AccountSetting Page</p>
+      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Change Password</p>
       <div>
         <Button
           onClick={() => {
@@ -902,7 +902,7 @@ function App() {
           type="danger"
           icon={<KeyOutlined />}
         >
-          ChangePassword
+          Change Password
         </Button>
       </div>
     </Layout.Content>
@@ -911,7 +911,7 @@ function App() {
   //修改密碼頁面
   const ChangePasswordPage = (
     <Layout.Content>
-      <p>This is ChangePassword Page</p>
+      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Change Password</p>
       <div /* 修改密碼(1/4) */>
         <p>Change your password here</p>
         <p>Please your Old password </p>
@@ -971,7 +971,7 @@ function App() {
           type="primary"
           onClick={() => {
             setSystemMessage("Thanks for Staying");
-            setSystemDescription("Stay here... ...");
+            setSystemDescription("");
             setSystemMessageType("success");
           }}
           icon={<CarOutlined />}
@@ -1121,7 +1121,7 @@ function App() {
               onClick={() => {
                 setPageState("Signout");
                 setSystemMessage("Are you sure to leave?");
-                setSystemDescription("Don't go ... ");
+                setSystemDescription("");
                 setSystemMessageType("success");
               }}
               key="Signout"
