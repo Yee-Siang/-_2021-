@@ -102,14 +102,14 @@ function App() {
   /* 當前使用者的所有備忘錄 */
   const [MemoData, setMemoData] = useState([]);
   const resetTodo = async (UserID) => {
-    const {data} = await axios.post("/api/allTodo", {user: UserID});
+    const { data } = await axios.post("/api/allTodo", { user: UserID });
     console.log("Todos: ", data.Todos);
     setMemoData(data.Todos);
   }
   /* 當前使用者的所有單字 */
   const [WordData, setWordData] = useState([]);
   const resetWord = async (UserID) => {
-    const {data} = await axios.post("/api/allWord", {user: UserID});
+    const { data } = await axios.post("/api/allWord", { user: UserID });
     console.log("Words: ", data.words);
     setWordData(data.words);
   }
@@ -135,7 +135,7 @@ function App() {
       setSystemDescription("Now you can login and start エムエム😳");
       setSystemMessageType("success");
       //初始化學習功能的字典
-      const {data} = await axios.post("/api/initWord", {user:SignupUserID});
+      const { data } = await axios.post("/api/initWord", { user: SignupUserID });
       console.log(data.message);
     } else {
       setSystemMessage("Signup failed!!");
@@ -467,7 +467,7 @@ function App() {
   //已登入的主頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
   const LoginPage = (
     <Layout.Content>
-      <p>Welcome back 🥺🥺 {NowUserID} 🥺🥺 Please choose the servive </p>
+      <h1 style={{ fontSize: "25px" }}>Welcome back {NowUserID} Please choose the service </h1>
     </Layout.Content>
   );
 
@@ -525,10 +525,10 @@ function App() {
             !e
               ? setSignupBirthday(["", "", ""])
               : setSignupBirthday([
-                  String(e).split(" ")[3],
-                  MonthToNumber(String(e).split(" ")[1]),
-                  String(e).split(" ")[2],
-                ]);
+                String(e).split(" ")[3],
+                MonthToNumber(String(e).split(" ")[1]),
+                String(e).split(" ")[2],
+              ]);
           }}
           placeholder="Enter your Birthday (optional)"
           style={{ width: "500px" }}
@@ -599,11 +599,11 @@ function App() {
       </Descriptions>
     </Layout.Content>
   );
-  
+
   //備忘錄頁面
   const MemoPage = (
     <Layout.Content>
-      <p style={{fontSize:"3rem", fontWeight:"100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem"}}>Memo</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Memo</p>
       <Memo user={NowUserID} axios={axios} data={MemoData}></Memo>
     </Layout.Content>
   );
@@ -697,15 +697,15 @@ function App() {
         onChange={(e) => {
           !e
             ? setNewCostDay([
-                String(Date()).split(" ")[3],
-                MonthToNumber(String(Date()).split(" ")[1]),
-                String(Date()).split(" ")[2],
-              ])
+              String(Date()).split(" ")[3],
+              MonthToNumber(String(Date()).split(" ")[1]),
+              String(Date()).split(" ")[2],
+            ])
             : setNewCostDay([
-                String(e).split(" ")[3],
-                MonthToNumber(String(e).split(" ")[1]),
-                String(e).split(" ")[2],
-              ]);
+              String(e).split(" ")[3],
+              MonthToNumber(String(e).split(" ")[1]),
+              String(e).split(" ")[2],
+            ]);
         }}
         placeholder="Enter your Cost Day, left blank is today"
         style={{ width: "500px" }}
@@ -744,11 +744,9 @@ function App() {
             title: "Day",
             dataIndex: "day",
             sorter: (a, b) =>
-              `${a.day.split("-")[0]}${a.day.split("-")[1]}${
-                a.day.split("-")[2]
+              `${a.day.split("-")[0]}${a.day.split("-")[1]}${a.day.split("-")[2]
               }` -
-              `${b.day.split("-")[0]}${b.day.split("-")[1]}${
-                b.day.split("-")[2]
+              `${b.day.split("-")[0]}${b.day.split("-")[1]}${b.day.split("-")[2]
               }`,
           },
         ]}
@@ -772,9 +770,8 @@ function App() {
         showIcon
       />
       <Alert
-        message={`Your net debt is : ${
-          handleTotalOutcome(MyCost) - handleTotalIncome(MyCost)
-        }`}
+        message={`Your net debt is : ${handleTotalOutcome(MyCost) - handleTotalIncome(MyCost)
+          }`}
         type="info"
         showIcon
       />
@@ -791,7 +788,7 @@ function App() {
   //學習功能頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
   const LearningPage = (
     <Layout.Content>
-      <p style={{fontSize:"3rem", fontWeight:"100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem"}}>Learning</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Learning</p>
       <Learning user={NowUserID} axios={axios} data={WordData}></Learning>
     </Layout.Content>
   );
@@ -850,19 +847,19 @@ function App() {
             !e
               ? setNewBirthday(["", "", ""])
               : setNewBirthday([
-                  String(e).split(" ")[3],
-                  MonthToNumber(String(e).split(" ")[1]),
-                  String(e).split(" ")[2],
-                ]);
+                String(e).split(" ")[3],
+                MonthToNumber(String(e).split(" ")[1]),
+                String(e).split(" ")[2],
+              ]);
           }}
           placeholder="Enter your Birthday (optional)"
           defaultValue={
             !NowBirthday[0]
               ? null
               : moment(
-                  `${NowBirthday[0]}-${NowBirthday[1]}-${NowBirthday[2]}`,
-                  "YYYY-MM-DD"
-                )
+                `${NowBirthday[0]}-${NowBirthday[1]}-${NowBirthday[2]}`,
+                "YYYY-MM-DD"
+              )
           }
           style={{ width: "500px" }}
         />
@@ -994,7 +991,7 @@ function App() {
           onCollapse={handleSiderCollapse}
           style={{ background: "#98BAE7", height: "auto" }}
         >
-          <p>🥺😳😎 エムエム_2021α</p>
+          <p>MM_2021_Alpha</p>
         </Layout.Sider>
       );
     } else {
@@ -1195,7 +1192,7 @@ function App() {
           description={SystemDescription}
         />
 
-        <p>2021🥺wp1101🥺final🥺🥺🥺🥺🥺 🥺 🥺 🥺 🥺 🥺 🥺 🥺 🥺 🥺🥺 </p>
+
       </Layout.Content>
     );
   };
