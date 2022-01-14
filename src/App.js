@@ -467,16 +467,14 @@ function App() {
   //已登入的主頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
   const LoginPage = (
     <Layout.Content>
-      <h1 style={{ fontSize: "25px" }}>Welcome back {NowUserID} Please choose the service </h1>
+      <h1 style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Welcome back {NowUserID} Please choose the service </h1>
     </Layout.Content>
   );
 
   //註冊頁面
   const SignupPage = (
     <Layout.Content>
-      <p>🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺</p>
-      <p>🥺 This is WelcomeエムエムPage🥺</p>
-      <p>🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺</p>
+      <p>Welcome Using our App</p>
       <p>This is Signup Page</p>
       <div /* 註冊輸入帳號 */>
         <p>Please Enter Your ID *</p>
@@ -725,7 +723,7 @@ function App() {
   //使用者記帳紀錄頁面
   const CheckMyCostPage = (
     <Layout.Content>
-      <p>This is CheckMyCost Page</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Accouting</p>
       <Table
         columns={[
           { title: "Title", dataIndex: "title" },
