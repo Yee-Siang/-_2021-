@@ -957,7 +957,7 @@ function App() {
             setNowSchool("");
             setNowBirthday(["", "", ""]);
             setNowAboutMe("");
-            setSystemMessage("Welcome to エムエム🥺🥺");
+            setSystemMessage("Welcome to MM_2021alpha");
             setSystemDescription("You are signup");
             setSystemMessageType("success");
           }}
@@ -968,7 +968,7 @@ function App() {
         <Button
           type="primary"
           onClick={() => {
-            setSystemMessage("謝謝你留下來陪郁翔😳😳");
+            setSystemMessage("Thanks for Staying");
             setSystemDescription("Stay here... ...");
             setSystemMessageType("success");
           }}
@@ -1001,12 +1001,11 @@ function App() {
           onCollapse={handleSiderCollapse}
           style={{ background: "#98BAE7", height: "auto" }}
         >
-          <p>This is Login Sider!</p>
           <p
             style={
               SiderOnCollapse
-                ? { fontSize: "50px", lineHeight: "10px" }
-                : { fontSize: "30px", lineHeight: "0px" }
+                ? { fontSize: "50px", lineHeight: "10px", marginTop: "2rem", textAlign: "center" }
+                : { fontSize: "30px", lineHeight: "0px", marginTop: "2rem", textAlign: "center" }
             }
           >
             {SiderLogo}
@@ -1050,7 +1049,7 @@ function App() {
                 onClick={() => {
                   setPageState("Memo");
                   setSystemMessage("This is Memo Page");
-                  setSystemDescription("施工中");
+                  setSystemDescription("");
                   setSystemMessageType("success");
                 }}
                 key="Memo"
@@ -1076,7 +1075,7 @@ function App() {
               onClick={() => {
                 setPageState("Chatroom");
                 setSystemMessage("This is Chatroom Page");
-                setSystemDescription("施工中");
+                setSystemDescription("");
                 setSystemMessageType("success");
               }}
               key="Chatroom"
@@ -1088,7 +1087,7 @@ function App() {
               onClick={() => {
                 setPageState("Learning");
                 setSystemMessage("This is Learning Page");
-                setSystemDescription("施工中");
+                setSystemDescription("");
                 setSystemMessageType("success");
               }}
               key="Learning"
@@ -1131,7 +1130,7 @@ function App() {
             <Menu.Item
               onClick={() => {
                 setPageState("Signout");
-                setSystemMessage("Are you sure to leave エムエム 🥺🥺?");
+                setSystemMessage("Are you sure to leave?");
                 setSystemDescription("Don't go ... ");
                 setSystemMessageType("success");
               }}
@@ -1191,8 +1190,6 @@ function App() {
           showIcon
           description={SystemDescription}
         />
-
-
       </Layout.Content>
     );
   };
