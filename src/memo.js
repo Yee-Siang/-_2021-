@@ -119,12 +119,12 @@ function Memo(props) {
     },
   ];
   //render
+  const [color, setColor] = useState([1,0,0]);
   return (
-    <>
-      <Input.Group compact>
-
+    <div style={{ display: "flex", flexDirection: "column"}}>
+      <Input.Group compact style={{ width: '98%', margin: "1%" }}>
         <DatePicker
-          style={{ width: '30%' }}
+          style={{ width: '30%'}}
           onChange={(e) => {
             //console.log(String(e))
             setNewDate(e)
@@ -137,15 +137,19 @@ function Memo(props) {
           onChange={(e) => { setNewTodo(e.target.value) }}
           enterButton="Add" />
       </Input.Group>
-      <Space>
-        <Button type="primary" style={{ width: '8rem' }} onClick={() => { setNow("All"); }}>All</Button>
-        <Button type="primary" style={{ width: '8rem' }} onClick={() => { setNow("Active"); }}>Active</Button>
-        <Button type="primary" style={{ width: '8rem' }} onClick={() => { setNow("Complete"); }}>Complete</Button>
-        <Button type="primary" style={{ width: '8rem' }} onClick={() => { handleClear("Complete") }}>Clear Complete</Button>
-        <Button type="primary" style={{ width: '8rem' }} onClick={() => { handleClear("All") }}>Clear All</Button>
+      <Space style={{ width: '98%', marginLeft: "1%", marginBottom: "1%", display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+        <Space>
+          <Button type={color[0]? "primary":"default"} style={{ width: '8rem' }} onClick={() => { setNow("All"); setColor([1,0,0])}}>All</Button>
+          <Button type={color[1]? "primary":"default"} style={{ width: '8rem' }} onClick={() => { setNow("Active"); setColor([0,1,0])}}>Active</Button>
+          <Button type={color[2]? "primary":"default"} style={{ width: '8rem' }} onClick={() => { setNow("Complete"); setColor([0,0,1])}}>Complete</Button>
+        </Space>
+        <Space>
+          <Button type="default" ghost style={{ width: '8rem', color: "green", borderColor: "green"}} onClick={() => { handleClear("Complete") }}>Clear Complete</Button>
+          <Button type="primary" ghost danger style={{ width: '8rem' }} onClick={() => { handleClear("All") }}>Clear All</Button>
+        </Space>
       </Space>
-      <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 6 }} />
-    </>
+      <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 6 }} style={{ width: '98%', marginLeft: "1%", marginBottom: "1%" }}/>
+    </div>
   )
 }
 

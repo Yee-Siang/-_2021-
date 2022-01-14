@@ -603,7 +603,7 @@ function App() {
   //備忘錄頁面
   const MemoPage = (
     <Layout.Content>
-      <p>This is Memo Page</p>
+      <p style={{fontSize:"3rem", fontWeight:"100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem"}}>Memo</p>
       <Memo user={NowUserID} axios={axios} data={MemoData}></Memo>
     </Layout.Content>
   );
@@ -791,7 +791,7 @@ function App() {
   //學習功能頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
   const LearningPage = (
     <Layout.Content>
-      <p>This is Learning Page</p>
+      <p style={{fontSize:"3rem", fontWeight:"100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem"}}>Learning</p>
       <Learning user={NowUserID} axios={axios} data={WordData}></Learning>
     </Layout.Content>
   );

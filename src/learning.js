@@ -130,11 +130,11 @@ function Learning(props) {
   };
   const test = (
     <>
-      <h1 style={{marginLeft: "1rem"}}>What does {p} mean ?</h1>
+      <p style={{fontSize:"2rem", fontWeight:"100", lineHeight: "2rem", marginLeft: "1rem", marginBottom: "1rem"}}>What does {p} mean ?</p>
       <Radio.Group name="radiogroup" value={choosenAns} style={{marginLeft: "1rem"}} onChange={(e) => {setChoosenAns(e.target.value)}}>
         <Space direction="vertical">
           {answerList.map((p,i) => <Radio value={p}>{allData[p].answer}</Radio>)}
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={handleSubmit} type="primary">Submit</Button>
         </Space>
       </Radio.Group>
       
@@ -143,7 +143,7 @@ function Learning(props) {
   ////////////////////////////////////////////////////
   //搜尋單字
   const handleSearch = () => {
-    const dataFilter = allData.filter((data) => {return data.word.includes(find)});
+    const dataFilter = allData.filter((data) => {return data.word.includes(find) || data.answer.includes(find)});
     //onsole.log(dataFilter);
     setShowData(dataFilter);
     setFind("");
@@ -193,15 +193,15 @@ function Learning(props) {
   //字典功能頁面
   const dictionary = (
     <>
-      <Button type="primary" onClick={() => {setShowData(allData)}}>Show all words</Button>
       <Input.Search
           value={find}
           style={{ width: '100%' }}
           placeholder="Search a word"
           onSearch={handleSearch}
           onChange={(e) => {setFind(e.target.value)}}
+          style={{ width: "98%", marginLeft: "1rem", marginBottom: "0.2rem"}}
           enterButton/>
-      <Input.Group compact>
+      <Input.Group compact style={{ width: "98%", marginLeft: "1rem", marginBottom: "0.2rem"}}>
         <Input
           value={newWord}
           style={{ width: '50%' }}
@@ -215,15 +215,16 @@ function Learning(props) {
           enterButton="Add"
           placeholder="What does it mean?"/>
       </Input.Group>
-      <Table dataSource={showData} columns={columns} pagination={{pageSize: 6}}/>
+      <Table dataSource={showData} columns={columns} pagination={{pageSize: 6}} style={{ width: "98%", marginLeft: "1rem", marginBottom: "1rem"}}/>
     </>
   )
 
   return (
     <>
-      <Space style={{ width: "100%" }}>
-        <Button type="primary" style={{ width: '8rem' }} onClick={() => {setFeature("dictionary")}}>Dictionary</Button>
-        <Button type="primary" style={{ width: '8rem' }} onClick={handleTest}>Quiz</Button>
+      <Space style={{ width: "98%", margin: "1rem"}}>
+        <Button style={{ width: '8rem' }} onClick={() => {setFeature("dictionary")}}>Dictionary</Button>
+        <Button style={{ width: '8rem' }} onClick={handleTest}>Quiz</Button>
+        {feature=="dictionary"? <Button type="primary" onClick={() => {setShowData(allData)}}>Show all words</Button>: <></>}
       </Space>
       <Modal title="How many problems do you want" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <Input value={problemsNum} onChange={(e) => {setProblemsNum(e.target.value)}}></Input>
