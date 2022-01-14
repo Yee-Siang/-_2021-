@@ -7,8 +7,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import User from "../model/user.js";
 import Cost from "../model/cost.js";
-import MemoApi from "./MemoBackend";
-import learningApi from "./LearningBackend";
+import MemoApi from "./MemoBackend.js";
+import learningApi from "./LearningBackend.js";
 ///////////////////////////////////////////////////////////////////////////////
 
 /* 連接資料庫 */

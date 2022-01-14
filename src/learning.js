@@ -143,7 +143,7 @@ function Learning(props) {
   ////////////////////////////////////////////////////
   //搜尋單字
   const handleSearch = () => {
-    const dataFilter = allData.filter((data) => {return data.word.includes(find)});
+    const dataFilter = allData.filter((data) => {return data.word.includes(find) || data.answer.includes(find)});
     //onsole.log(dataFilter);
     setShowData(dataFilter);
     setFind("");
