@@ -1052,7 +1052,7 @@ function App() {
                 onClick={() => {
                   setPageState("Memo");
                   setSystemMessage("This is Memo Page");
-                  setSystemDescription("施工中");
+                  setSystemDescription("");
                   setSystemMessageType("success");
                 }}
                 key="Memo"
@@ -1078,7 +1078,7 @@ function App() {
               onClick={() => {
                 setPageState("Chatroom");
                 setSystemMessage("This is Chatroom Page");
-                setSystemDescription("施工中");
+                setSystemDescription("");
                 setSystemMessageType("success");
               }}
               key="Chatroom"
@@ -1090,7 +1090,7 @@ function App() {
               onClick={() => {
                 setPageState("Learning");
                 setSystemMessage("This is Learning Page");
-                setSystemDescription("施工中");
+                setSystemDescription("");
                 setSystemMessageType("success");
               }}
               key="Learning"
