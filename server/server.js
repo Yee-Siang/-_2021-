@@ -31,6 +31,7 @@ const wss = new WebSocket.Server({ server });
 app.use(cors());
 app.use(bodyParser.json());
 
+
 /* 確定有連到資料庫 */
 db.once("open", () => {
   console.log("MongoDB connected!");
@@ -254,7 +255,7 @@ const ChangePersonalInfo = async (
         Birthday: NewBirthday,
         AboutMe: NewAboutMe,
       },
-      function (err, res) {}
+      function (err, res) { }
     );
     console.log("BackendFinishChangePersonalInfo");
     return ["You can check them in personalinfo page", true];
@@ -291,7 +292,7 @@ const ChangePassword = async (UserID, OldPassword, NewPassword) => {
         User.updateOne(
           { UserID: UserID },
           { Password: NewPassword },
-          function (err, res) {}
+          function (err, res) { }
         );
         console.log("BackendFinishChangePassword");
         return [`OldPW: ${OldPassword},NEWPW: ${NewPassword})`, true];
