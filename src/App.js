@@ -1002,14 +1002,13 @@ function App() {
         <Layout.Sider
           collapsible
           onCollapse={handleSiderCollapse}
-          style={{ background: "#98BAE7", height: "auto" }}
+          style={{ background: "#98BAE7", height: "auto"}}
         >
-          <p>This is Login Sider!</p>
           <p
             style={
               SiderOnCollapse
-                ? { fontSize: "50px", lineHeight: "10px" }
-                : { fontSize: "30px", lineHeight: "0px" }
+                ? { fontSize: "50px", lineHeight: "10px", marginTop: "2rem", textAlign: "center"}
+                : { fontSize: "30px", lineHeight: "0px" , marginTop: "2rem", textAlign: "center"}
             }
           >
             {SiderLogo}
@@ -1187,14 +1186,13 @@ function App() {
   //底部訊息，包含系統發送給前端的任何訊息
   const PageFooter = () => {
     return (
-      <Layout.Content style={{ background: "#B8E4F0" }}>
+      <Layout.Content style={{ background: "#B8E4F0"}}>
         <Alert
           message={SystemMessage}
           type={SystemMessageType}
           showIcon
           description={SystemDescription}
         />
-
         <p>2021🥺wp1101🥺final🥺🥺🥺🥺🥺 🥺 🥺 🥺 🥺 🥺 🥺 🥺 🥺 🥺🥺 </p>
       </Layout.Content>
     );
