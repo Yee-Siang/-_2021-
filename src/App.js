@@ -31,11 +31,11 @@ import {
   KeyOutlined,
   ToolOutlined,
 } from "@ant-design/icons";
-import axios from "./api";
+import axios from "./api.js";
 import moment from "moment";
 import { sum } from "lodash";
-import Memo from "./memo"
-import Learning from "./learning";
+import Memo from "./memo.js"
+import Learning from "./learning.js";
 
 function App() {
   ///////////////////////////////////////////////////////////////////////////////
@@ -578,7 +578,7 @@ function App() {
   const PersonalInfoPage = (
     <Layout.Content>
       <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>About You</p>
-      <Descriptions bordered column={1} style={{width: "98%", marginLeft:"1%", marginLeft:"1%"}}>
+      <Descriptions bordered column={1} style={{ width: "98%", marginLeft: "1%", marginLeft: "1%" }}>
         <Descriptions.Item label="UserId">{NowUserID}</Descriptions.Item>
         <Descriptions.Item label="Password">
           {NowUserPassword}
@@ -1156,7 +1156,7 @@ function App() {
   //底部訊息，包含系統發送給前端的任何訊息
   const PageFooter = () => {
     return (
-      <Layout.Footer style={{ background: "#B8E4F0", height: "auto"}}>
+      <Layout.Footer style={{ background: "#B8E4F0", height: "auto" }}>
         <Alert
           message={SystemMessage}
           type={SystemMessageType}
@@ -1168,13 +1168,13 @@ function App() {
   };
   //彈出式視窗
   //註冊新用戶的
-  const [ isModalVisible,  setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const handleOk = () => {
     setIsModalVisible(false);
     setPageState("Welcome");
   };
   //登出的
-  const [ isModalVisible_2,  setIsModalVisible_2] = useState(false);
+  const [isModalVisible_2, setIsModalVisible_2] = useState(false);
   const handleOk_2 = () => {
     setIsModalVisible_2(false);
     setPageState("Welcome");
@@ -1199,15 +1199,15 @@ function App() {
   return (
     <Layout>
       {PageSider()}
-      <Layout style={{height: "100vh", background: "#CCDDEE"}}>
+      <Layout style={{ height: "100vh", background: "#CCDDEE" }}>
         {NowPageContent()}
         {/*PageFooter()*/}
       </Layout>
       <Modal title="System message" visible={isModalVisible} closable={false} footer={[<Button key="Got it" onClick={handleOk}>Back to login page</Button>]}>
         <h1>{SystemMessage}</h1>
       </Modal>
-      <Modal title="System message" visible={isModalVisible_2} closable={false} 
-             onOk={handleOk_2} onCancel={handleCancel_2} okText={"Yes"} cancelText={"No"}>
+      <Modal title="System message" visible={isModalVisible_2} closable={false}
+        onOk={handleOk_2} onCancel={handleCancel_2} okText={"Yes"} cancelText={"No"}>
         <h1>Sure to signout?</h1>
       </Modal>
     </Layout>
