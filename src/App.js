@@ -585,7 +585,7 @@ function App() {
         </Descriptions.Item>
         <Descriptions.Item label="Nickname">{NowNickname}</Descriptions.Item>
         <Descriptions.Item label="School">
-          {NowSchool === "" ? "文盲" : NowSchool}
+          {NowSchool === "" ? "Not Set" : NowSchool}
         </Descriptions.Item>
         <Descriptions.Item label="Birthday">
           {NowBirthday[0] === ""
