@@ -12,7 +12,8 @@ import {
   Table,
   Alert,
   message,
-  Modal
+  Modal,
+  Space
 } from "antd";
 import {
   UserOutlined,
@@ -605,64 +606,15 @@ function App() {
   //備忘錄頁面
   const MemoPage = (
     <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Memo</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Memo</p>
       <Memo user={NowUserID} axios={axios} data={MemoData}></Memo>
     </Layout.Content>
   );
 
-  //記帳本頁面
-  const SpendingPage = (
-    <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Spending</p>
-      <div>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={() => {
-            setPageState("NewCost");
-            setNewCostTitle("");
-            setNewCostMoney("");
-            setNewCostTag("");
-            setNewCostDay([
-              String(Date()).split(" ")[3],
-              MonthToNumber(String(Date()).split(" ")[1]),
-              String(Date()).split(" ")[2],
-            ]);
-            setNewCostIsOutcome(true);
-            setSystemMessage("You can record your income or outcome here");
-            setSystemDescription("Please enter some detail about the cost.");
-            setSystemMessageType("success");
-          }}
-          type="danger"
-        >
-          Create New Cost
-        </Button>
-      </div>
-      <div /*從資料庫取得目前使用者記帳紀錄(1/4)*/>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={() => {
-            setPageState("CheckMyCost");
-            handleCheckMyCost(NowUserID);
-          }}
-          type="primary"
-        >
-          Check My Cost
-        </Button>
-      </div>
-      <div /* 刪除個人所有記帳紀錄(1/4) */>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={handleDeleteMyCost} type="danger">
-          Delete My Cost
-        </Button>
-      </div>
-    </Layout.Content>
-  );
-
   //新增一筆記帳頁面
+  const [spend_p, setSpend_p] = useState(1);
   const NewCostPage = (
-    <Layout.Content>
-      <p>This is NewCost Page</p>
+    <Layout.Content style={{ width: '98%', margin: "1%" }}>
       <p>Please Enter Your Cost Title*</p>
       <Input
         onChange={(e) => {
@@ -670,6 +622,7 @@ function App() {
         }}
         placeholder="Enter your Cost Title"
         prefix={<AccountBookOutlined />}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Money*</p>
       <InputNumber
@@ -688,7 +641,7 @@ function App() {
           !e ? setNewCostMoney(0) : setNewCostMoney(e);
         }}
         placeholder="Enter your Cost Money"
-        style={{ width: "500px" }}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Tag</p>
       <Input
@@ -697,6 +650,7 @@ function App() {
         }}
         placeholder="Enter your Tag"
         prefix={<AimOutlined />}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Day</p>
       <DatePicker
@@ -714,12 +668,12 @@ function App() {
             ]);
         }}
         placeholder="Enter your Cost Day, left blank is today"
-        style={{ width: "500px" }}
+        style={{width: "80%", marginBottom: "2%"}}
       />
       <div /* 新增一筆記帳(1/4) */>
         <Button
-          onClick={handleCreateNewCost}
-          type="danger"
+          onClick={() => {handleCreateNewCost();handleCheckMyCost(NowUserID);setSpend_p(1)}}
+          type="primary"
           disabled={!NewCostTitle || !NewCostMoney}
         >
           Submit
@@ -730,8 +684,20 @@ function App() {
 
   //使用者記帳紀錄頁面
   const CheckMyCostPage = (
-    <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Accouting</p>
+    <Layout.Content style={{ width: '98%', margin: "1%" }}>
+      <Alert
+        message={`Your total outcome is : ${handleTotalOutcome(MyCost)}`}
+        type="info"
+      />
+      <Alert
+        message={`Your total income is : ${handleTotalIncome(MyCost)}`}
+        type="info"
+      />
+      <Alert
+        message={`Your net debt is : ${handleTotalOutcome(MyCost) - handleTotalIncome(MyCost)
+          }`}
+        type="info"
+      />
       <Table
         columns={[
           { title: "Title", dataIndex: "title" },
@@ -764,23 +730,55 @@ function App() {
           day: `${e[4][0]}-${e[4][1]}-${e[4][2]}`,
           key: e,
         }))}
+        pagination={{ pageSize: 6 }}
       />
-      <Alert
-        message={`Your total outcome is : ${handleTotalOutcome(MyCost)}`}
-        type="info"
-        showIcon
-      />
-      <Alert
-        message={`Your total income is : ${handleTotalIncome(MyCost)}`}
-        type="info"
-        showIcon
-      />
-      <Alert
-        message={`Your net debt is : ${handleTotalOutcome(MyCost) - handleTotalIncome(MyCost)
-          }`}
-        type="info"
-        showIcon
-      />
+    </Layout.Content>
+  );
+  //記帳本頁面
+  const SpendingPage = (
+    <Layout.Content>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Spending</p>
+      <Space style={{margin:"1%"}}>
+        <Button
+          onClick={() => {
+            setSpend_p(0);
+            setNewCostTitle("");
+            setNewCostMoney("");
+            setNewCostTag("");
+            setNewCostDay([
+              String(Date()).split(" ")[3],
+              MonthToNumber(String(Date()).split(" ")[1]),
+              String(Date()).split(" ")[2],
+            ]);
+            setNewCostIsOutcome(true);
+            setSystemMessage("You can record your income or outcome here");
+            setSystemDescription("Please enter some detail about the cost.");
+            setSystemMessageType("success");
+          }}
+          type="primary"
+        >
+          Create New Cost
+        </Button>
+      
+      <div /*從資料庫取得目前使用者記帳紀錄(1/4)*/>
+        <Button
+          onClick={() => {
+            setSpend_p(1);
+            handleCheckMyCost(NowUserID);
+          }}
+          type="primary"
+        >
+          Check My Cost
+        </Button>
+      </div>
+      <div /* 刪除個人所有記帳紀錄(1/4) */>
+        <Button
+          onClick={() => {handleDeleteMyCost();handleCheckMyCost(NowUserID);setSpend_p(1)}} type="danger">
+          Delete My Cost
+        </Button>
+      </div>
+      </Space>
+      {spend_p == 1? CheckMyCostPage:NewCostPage}
     </Layout.Content>
   );
 
@@ -794,7 +792,7 @@ function App() {
   //學習功能頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
   const LearningPage = (
     <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Learning</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Learning</p>
       <Learning user={NowUserID} axios={axios} data={WordData}></Learning>
     </Layout.Content>
   );
