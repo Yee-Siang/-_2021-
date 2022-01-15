@@ -452,16 +452,7 @@ function App() {
           Signup
         </Button>
       </div>
-      <div /* 刪除所有使用者(1/4) */>
-        <Button onClick={handleDeleteAllUsers} type="danger">
-          Delete All Users
-        </Button>
-      </div>
-      <div /* 刪除所有用戶所有記帳(1/4) */>
-        <Button onClick={handleDeleteAllCosts} type="danger">
-          Delete All Costs
-        </Button>
-      </div>
+      
     </Layout.Content>
   );
 
@@ -585,7 +576,7 @@ function App() {
         </Descriptions.Item>
         <Descriptions.Item label="Nickname">{NowNickname}</Descriptions.Item>
         <Descriptions.Item label="School">
-          {NowSchool === "" ? "文盲" : NowSchool}
+          {NowSchool === "" ? "Not Set" : NowSchool}
         </Descriptions.Item>
         <Descriptions.Item label="Birthday">
           {NowBirthday[0] === ""
