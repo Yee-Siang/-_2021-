@@ -185,6 +185,8 @@ function App() {
     } else {
       setSystemMessage("Login failed!!");
       setSystemDescription(Message);
+      setLoginUserID("");
+      setLoginUserPassword("");
       setSystemMessageType("error");
       message.error("Login fail!");
     }
@@ -243,10 +245,13 @@ function App() {
     console.log(Message);
     if (ChangePasswordSuccess === "true") {
       setNowUserPassword(NewUserPassword);
+      setIsModalVisible_3(true);
       setSystemMessage("Change Password success !!");
       setSystemDescription(Message);
       setSystemMessageType("success");
     } else {
+      setIsModalVisible_3(true);
+      setSystemDescription(Message);
       setSystemMessage("Change Password failed !!");
       setSystemDescription("Some error happens !!");
       setSystemMessageType("error");
@@ -403,37 +408,41 @@ function App() {
   //登入前歡迎頁面
   const WelcomePage = (
     <Layout.Content>
-      <div /* 輸入使用者帳號 */>
-        <p>To Login , Please Enter Your ID</p>
+      <h1 style={{ fontSize: "4rem", fontWeight: "10", textAlign: "center", lineHeight: "4rem", marginBottom: "3rem", marginTop: "1rem" }}>エムエム 2021α</h1>
+      {/* 輸入使用者帳號 */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}>
+        <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>To Login , Please Enter Your ID</p>
         <Input
+          value={LoginUserID}
           onChange={(e) => {
             setLoginUserID(e.target.value);
           }}
           placeholder="Enter your UserID"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-      </div>
-      <div /* 輸入使用者密碼 */>
-        <p>Please Enter Your Password</p>
+        {/* 輸入使用者密碼 */}
+        <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>Please Enter Your Password</p>
         <Input
+        value={LoginUserPassword}
           onChange={(e) => {
             setLoginUserPassword(e.target.value);
           }}
           placeholder="Enter your Password"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "2%"}}
         />
-      </div>
-      <div /* 舊用戶登入(1/4) */>
+        {/* 舊用戶登入(1/4) */}
         <Button
           onClick={handleUsersLogin}
           disabled={!LoginUserID || !LoginUserPassword}
           type="primary"
+          style={{width: "16%", marginLeft: "42%", marginBottom: "2%"}}
         >
           Login
         </Button>
-      </div>
-      <div /* 註冊按鈕 */>
-        <p>First Time To エムエム ? Please Signup First</p>
+        {/* 註冊按鈕 */}
+        <p style={{width: "40%",marginLeft:"30%", textAlign: "center"}}>First Time To エムエム ? Please Signup First</p>
         <Button
           onClick={() => {
             setPageState("Signup");
@@ -448,6 +457,7 @@ function App() {
             setSystemMessageType("success");
           }}
           type="primary"
+          style={{width: "16%", marginLeft: "42%"}}
         >
           Signup
         </Button>
@@ -816,26 +826,27 @@ function App() {
   const ChangePersonalInfoPage = (
     <Layout.Content>
       <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Changing Personal Info</p>
-      <div /* 修改個人資料(1/4) */>
-        <p>You can change your Nickname here*</p>
+      {/* 修改個人資料(1/4) */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your Nickname here*</p>
         <Input
           onChange={(e) => {
             setNewNickname(e.target.value);
           }}
           placeholder="Enter your NewNickname"
           defaultValue={NowNickname}
-          prefix={<EyeInvisibleOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your School here</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your School here</p>
         <Input
           onChange={(e) => {
             setNewSchool(e.target.value);
           }}
           placeholder="Enter your NewSchool (optional) "
           defaultValue={NowSchool}
-          prefix={<EyeInvisibleOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your Birthday here</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your Birthday here</p>
         <DatePicker
           onChange={(e) => {
             !e
@@ -855,9 +866,9 @@ function App() {
                 "YYYY-MM-DD"
               )
           }
-          style={{ width: "500px" }}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your own Signature!</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your own Signature!</p>
         <Input.TextArea
           onChange={(e) => {
             setNewAboutMe(e.target.value);
@@ -865,11 +876,13 @@ function App() {
           placeholder="Enter your NewAboutMe (optional) "
           defaultValue={NowAboutMe}
           rows={3}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
         <Button
           onClick={handleChangePersonalInfo}
           disabled={!NewNickname}
           type="primary"
+          style={{width: "16%", marginLeft: "42%"}}
         >
           Submit
         </Button>
@@ -904,28 +917,33 @@ function App() {
   const ChangePasswordPage = (
     <Layout.Content>
       <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Change Password</p>
-      <div /* 修改密碼(1/4) */>
-        <p>Change your password here</p>
-        <p>Please your Old password </p>
+      {/* 修改密碼(1/4) */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}> 
+        <p style={{width: "40%",marginLeft:"30%"}}>Please your Old password </p>
         <Input
+          value={OldUserPassword}
           onChange={(e) => {
             setOldUserPassword(e.target.value);
           }}
           placeholder="Enter your OldPassword"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>Please your New password </p>
+        <p style={{width: "40%",marginLeft:"30%"}}>Please your New password </p>
         <Input
+          value={NewUserPassword}
           onChange={(e) => {
             setNewUserPassword(e.target.value);
           }}
           placeholder="Enter your NewPassword"
-          prefix={<EyeInvisibleOutlined />}
+          prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
         <Button
           onClick={handleChangePassword}
           disabled={!OldUserPassword || !NewUserPassword}
           type="primary"
+          style={{width: "16%", marginLeft: "42%"}}
         >
           Submit
         </Button>
@@ -980,13 +998,7 @@ function App() {
   const PageSider = () => {
     if (HasLogin === false) {
       return (
-        <Layout.Sider
-          collapsible
-          onCollapse={handleSiderCollapse}
-          style={{ background: "#98BAE7", height: "auto" }}
-        >
-          <p>MM_2021_Alpha</p>
-        </Layout.Sider>
+       <></>
       );
     } else {
       return (
@@ -1186,6 +1198,14 @@ function App() {
   const handleCancel_2 = () => {
     setIsModalVisible_2(false);
   }
+  //改帳密
+  const [ isModalVisible_3,  setIsModalVisible_3] = useState(false);
+  const handleOk_3 = () => {
+    setIsModalVisible_3(false);
+    //setPageState("PersonalInfo");
+    setOldUserPassword("");
+    setNewUserPassword("");
+  };
   //回傳側邊選單+頁面內容+底部訊息
   return (
     <Layout>
@@ -1194,7 +1214,10 @@ function App() {
         {NowPageContent()}
         {/*PageFooter()*/}
       </Layout>
-      <Modal title="System message" visible={isModalVisible} closable={false} footer={[<Button key="Got it" onClick={handleOk}>Back to login page</Button>]}>
+      <Modal title="System message" visible={isModalVisible} closable={false} footer={[<Button key="Got it" onClick={handleOk}>Got it</Button>]}>
+        <h1>{SystemMessage}</h1>
+      </Modal>
+      <Modal title="System message" visible={isModalVisible_3} closable={false} footer={[<Button key="Got it" onClick={handleOk_3}>Got it</Button>]}>
         <h1>{SystemMessage}</h1>
       </Modal>
       <Modal title="System message" visible={isModalVisible_2} closable={false} 
