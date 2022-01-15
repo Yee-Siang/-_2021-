@@ -46,6 +46,10 @@ db.once("open", () => {
   server.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
   });
+  const host = '0.0.0.0';
+  app.listen(PORT, host, function () {
+    console.log("Server started.......");
+  });
 });
 
 /*server 前端的程式碼*/
