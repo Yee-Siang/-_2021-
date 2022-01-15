@@ -418,7 +418,7 @@ function App() {
   //登入前歡迎頁面
   const WelcomePage = (
     <Layout.Content>
-      <h1 style={{ fontSize: "4rem", fontWeight: "10", textAlign: "center", lineHeight: "4rem", marginBottom: "3rem", marginTop: "1rem" }}>エムエム 2021α</h1>
+      <h1 style={{ fontSize: "4rem", fontWeight: "10", textAlign: "center", lineHeight: "4rem", marginBottom: "3rem", marginTop: "3rem" }}>エムエム 2021α</h1>
       {/* 輸入使用者帳號 */}
       <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}>
         <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>To Login , Please Enter Your ID</p>
@@ -429,7 +429,7 @@ function App() {
           }}
           placeholder="Enter your UserID"
           prefix={<UserOutlined />}
-          style={{width: "20%", marginLeft: "40%", marginBottom: "3%"}}
+          style={{width: "20%", marginLeft: "40%", marginBottom: "1%"}}
         />
         {/* 輸入使用者密碼 */}
         <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>Please Enter Your Password</p>
