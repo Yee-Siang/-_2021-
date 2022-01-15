@@ -799,7 +799,7 @@ function App() {
   //一般設定頁面
   const NormalSettingPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Changing Personal Info</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Changing Personal Info</p>
       <div>
         <Button
           onClick={() => {
@@ -824,7 +824,7 @@ function App() {
   //修改個人資料頁面
   const ChangePersonalInfoPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Changing Personal Info</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Changing Personal Info</p>
       <div /* 修改個人資料(1/4) */>
         <p>You can change your Nickname here*</p>
         <Input
@@ -889,7 +889,7 @@ function App() {
   //帳號設定頁面
   const AccountSettingPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Change Password</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Change Password</p>
       <div>
         <Button
           onClick={() => {
@@ -912,7 +912,7 @@ function App() {
   //修改密碼頁面
   const ChangePasswordPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Change Password</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Change Password</p>
       <div /* 修改密碼(1/4) */>
         <p>Change your password here</p>
         <p>Please your Old password </p>
@@ -1002,7 +1002,6 @@ function App() {
         <Layout.Sider
           collapsible
           onCollapse={handleSiderCollapse}
-          style={{ background: "#98BAE7", height: "auto" }}
         >
           <p
             style={
@@ -1074,9 +1073,13 @@ function App() {
             >
               <Menu.Item
                 onClick={() => {
-                  setPageState("NormalSetting");
-                  setSystemMessage("This is normal setting page");
-                  setSystemDescription("Do you want yo modify somthing?");
+                  setPageState("ChangePersonalInfo");
+                  setNewNickname(NowNickname);
+                  setNewSchool(NowSchool);
+                  setNewBirthday(NowBirthday);
+                  setNewAboutMe(NowAboutMe);
+                  setSystemMessage("You can change your PersonalInfo here");
+                  setSystemDescription("* implies needed");
                   setSystemMessageType("success");
                 }}
                 key="NormalSetting"
@@ -1086,9 +1089,11 @@ function App() {
               </Menu.Item>
               <Menu.Item
                 onClick={() => {
-                  setPageState("AccountSetting");
-                  setSystemMessage("This is AccountSetting Page");
-                  setSystemDescription("Do you want yo modify somthing?");
+                  setPageState("ChangePassword");
+                  setOldUserPassword("");
+                  setNewUserPassword("");
+                  setSystemMessage("You can change your password here");
+                  setSystemDescription("Please enter your old and new PW");
                   setSystemMessageType("success");
                 }}
                 key="AccountSetting"
