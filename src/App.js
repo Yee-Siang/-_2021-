@@ -1224,7 +1224,7 @@ function App() {
       </Modal>
       <Modal title="System message" visible={isModalVisible_2} closable={false} 
              onOk={handleOk_2} onCancel={handleCancel_2} okText={"Yes"} cancelText={"No"}>
-        <h1>Sure to signout?</h1>
+        <h1>Sure to logout?</h1>
       </Modal>
     </Layout>
   );
