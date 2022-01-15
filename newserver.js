@@ -35,7 +35,6 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-server.applyMiddleware({ app });
 
 
 /* 確定有連到資料庫 */
