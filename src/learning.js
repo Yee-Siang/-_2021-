@@ -199,9 +199,9 @@ function Learning(props) {
           placeholder="Search a word"
           onSearch={handleSearch}
           onChange={(e) => {setFind(e.target.value)}}
-          style={{ width: "98%", marginLeft: "1rem", marginBottom: "0.2rem"}}
+          style={{ width: "98%", marginLeft: "1%", marginBottom: "0.2rem"}}
           enterButton/>
-      <Input.Group compact style={{ width: "98%", marginLeft: "1rem", marginBottom: "0.2rem"}}>
+      <Input.Group compact style={{ width: "98%", marginLeft: "1%", marginBottom: "0.2rem"}}>
         <Input
           value={newWord}
           style={{ width: '50%' }}
@@ -215,13 +215,13 @@ function Learning(props) {
           enterButton="Add"
           placeholder="What does it mean?"/>
       </Input.Group>
-      <Table dataSource={showData} columns={columns} pagination={{pageSize: 6}} style={{ width: "98%", marginLeft: "1rem", marginBottom: "1rem"}}/>
+      <Table dataSource={showData} columns={columns} pagination={{pageSize: 6}} style={{ width: "98%", marginLeft: "1%", marginBottom: "1rem"}}/>
     </>
   )
 
   return (
     <>
-      <Space style={{ width: "98%", margin: "1rem"}}>
+      <Space style={{ width: "98%", margin: "1%"}}>
         <Button style={{ width: '8rem' }} onClick={() => {setFeature("dictionary")}}>Dictionary</Button>
         <Button style={{ width: '8rem' }} onClick={handleTest}>Quiz</Button>
         {feature=="dictionary"? <Button type="primary" onClick={() => {setShowData(allData)}}>Show all words</Button>: <></>}

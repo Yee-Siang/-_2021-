@@ -3,19 +3,16 @@ import "antd/dist/antd.css";
 import {
   Button,
   Input,
-  Tag,
-  Tooltip,
   Layout,
   Menu,
-  Breadcrumb,
   Descriptions,
-  Badge,
   DatePicker,
   InputNumber,
-  Select,
   Radio,
   Table,
   Alert,
+  message,
+  Modal
 } from "antd";
 import {
   UserOutlined,
@@ -131,14 +128,16 @@ function App() {
     });
     console.log(Message);
     if (SignupSuccess === "true") {
-      setSystemMessage("Signup success!!");
+      setSystemMessage("Signup success!! \n Now you can login and start!!");
+      setIsModalVisible(true);
       setSystemDescription("Now you can login and start!!");
       setSystemMessageType("success");
       //初始化學習功能的字典
       const { data } = await axios.post("/api/initWord", { user: SignupUserID });
       console.log(data.message);
     } else {
-      setSystemMessage("Signup failed!!");
+      setSystemMessage(Message);
+      setIsModalVisible(true);
       setSystemDescription(Message);
       setSystemMessageType("error");
     }
@@ -163,7 +162,7 @@ function App() {
 
     if (LoginSuccess === "true") {
       setHasLogin(true);
-      setPageState("Login");
+      setPageState("PersonalInfo");
       setNowUserID(UserID);
       setNowUserPassword(UserPassword);
       setNowNickname(Nickname);
@@ -181,11 +180,13 @@ function App() {
       resetTodo(UserID);
       //query words
       resetWord(UserID);
+      message.success("Login success!");
 
     } else {
       setSystemMessage("Login failed!!");
       setSystemDescription(Message);
       setSystemMessageType("error");
+      message.error("Login fail!");
     }
   };
 
@@ -576,8 +577,8 @@ function App() {
   //個人資訊頁面
   const PersonalInfoPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>About Myself</p>
-      <Descriptions bordered column={1}>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>About You</p>
+      <Descriptions bordered column={1} style={{width: "98%", marginLeft:"1%", marginLeft:"1%"}}>
         <Descriptions.Item label="UserId">{NowUserID}</Descriptions.Item>
         <Descriptions.Item label="Password">
           {NowUserPassword}
@@ -1014,21 +1015,9 @@ function App() {
           </p>
           <Menu
             theme="dark" /* 各種功能和登出按鈕 */
-            defaultSelectedKeys={["Login"]}
+            defaultSelectedKeys={["PersonalInfo"]}
             mode="inline"
           >
-            <Menu.Item
-              onClick={() => {
-                setPageState("Login");
-                setSystemMessage(`Welcome back , ${NowUserID}`);
-                setSystemDescription("You are free to choose the service");
-                setSystemMessageType("success");
-              }}
-              key="Login"
-              icon={<SmileOutlined />}
-            >
-              Welcome
-            </Menu.Item>
             <Menu.Item
               onClick={() => {
                 setPageState("PersonalInfo");
@@ -1041,38 +1030,30 @@ function App() {
             >
               Personal Info
             </Menu.Item>
-
-            <Menu.SubMenu /* 提醒事項的子選單，分為備忘錄（memo）跟記帳區（spending）*/
-              title="Reminder"
-              key="Reminder"
-              icon={<AlertOutlined />}
+            <Menu.Item
+              onClick={() => {
+                setPageState("Memo");
+                setSystemMessage("This is Memo Page");
+                setSystemDescription("");
+                setSystemMessageType("success");
+              }}
+              key="Memo"
+              icon={<AuditOutlined />}
             >
-              <Menu.Item
-                onClick={() => {
-                  setPageState("Memo");
-                  setSystemMessage("This is Memo Page");
-                  setSystemDescription("");
-                  setSystemMessageType("success");
-                }}
-                key="Memo"
-                icon={<AuditOutlined />}
-              >
-                Memo
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  setPageState("Spending");
-                  setSystemMessage("This is Spending Page");
-                  setSystemDescription("You can manage your cost here.");
-                  setSystemMessageType("success");
-                }}
-                key="Spending"
-                icon={<DollarOutlined />}
-              >
-                Spending
-              </Menu.Item>
-            </Menu.SubMenu>
-
+              Memo
+            </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                setPageState("Spending");
+                setSystemMessage("This is Spending Page");
+                setSystemDescription("You can manage your cost here.");
+                setSystemMessageType("success");
+              }}
+              key="Spending"
+              icon={<DollarOutlined />}
+            >
+              Spending
+            </Menu.Item>
             <Menu.Item
               onClick={() => {
                 setPageState("Learning");
@@ -1119,10 +1100,7 @@ function App() {
 
             <Menu.Item
               onClick={() => {
-                setPageState("Signout");
-                setSystemMessage("Are you sure to leave?");
-                setSystemDescription("");
-                setSystemMessageType("success");
+                setIsModalVisible_2(true);
               }}
               key="Signout"
               icon={<CarOutlined />}
@@ -1173,25 +1151,60 @@ function App() {
   //底部訊息，包含系統發送給前端的任何訊息
   const PageFooter = () => {
     return (
-      <Layout.Content style={{ background: "#B8E4F0" }}>
+      <Layout.Footer style={{ background: "#B8E4F0", height: "auto"}}>
         <Alert
           message={SystemMessage}
           type={SystemMessageType}
           showIcon
           description={SystemDescription}
         />
-      </Layout.Content>
+      </Layout.Footer>
     );
   };
+  //彈出式視窗
+  //註冊新用戶的
+  const [ isModalVisible,  setIsModalVisible] = useState(false);
+  const handleOk = () => {
+    setIsModalVisible(false);
+    setPageState("Welcome");
+  };
+  //登出的
+  const [ isModalVisible_2,  setIsModalVisible_2] = useState(false);
+  const handleOk_2 = () => {
+    setIsModalVisible_2(false);
+    setPageState("Welcome");
+    setLoginUserID("");
+    setLoginUserPassword("");
+    setHasLogin(false);
+    setNowUserID("");
+    setNowUserPassword("");
+    setNowNickname("");
+    setNowSchool("");
+    setNowBirthday(["", "", ""]);
+    setNowAboutMe("");
+    setSystemMessage("Welcome to MM_2021alpha");
+    setSystemDescription("You are signup");
+    setSystemMessageType("success");
+  };
 
+  const handleCancel_2 = () => {
+    setIsModalVisible_2(false);
+  }
   //回傳側邊選單+頁面內容+底部訊息
   return (
     <Layout>
       {PageSider()}
-      <Layout>
-        <Layout style={{ background: "#CCDDEE" }}>{NowPageContent()}</Layout>
-        {PageFooter()}
+      <Layout style={{height: "100vh", background: "#CCDDEE"}}>
+        {NowPageContent()}
+        {/*PageFooter()*/}
       </Layout>
+      <Modal title="System message" visible={isModalVisible} closable={false} footer={[<Button key="Got it" onClick={handleOk}>Back to login page</Button>]}>
+        <h1>{SystemMessage}</h1>
+      </Modal>
+      <Modal title="System message" visible={isModalVisible_2} closable={false} 
+             onOk={handleOk_2} onCancel={handleCancel_2} okText={"Yes"} cancelText={"No"}>
+        <h1>Sure to signout?</h1>
+      </Modal>
     </Layout>
   );
 }
