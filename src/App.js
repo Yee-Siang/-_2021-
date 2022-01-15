@@ -472,10 +472,6 @@ function App() {
         </Button>
       </div>
       
-<<<<<<< HEAD
-      
-=======
->>>>>>> jason_style
     </Layout.Content>
   );
 
