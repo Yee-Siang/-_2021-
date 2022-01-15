@@ -43,13 +43,11 @@ app.use(cors());
 db.once("open", () => {
   console.log("MongoDB connected!");
   const PORT = process.env.port || 4000;
-  server.listen(PORT, () => {
+  const host = '0.0.0.0';
+  server.listen(PORT, host, () => {
     console.log(`Listening on ${PORT}`);
   });
-  const host = '0.0.0.0';
-  app.listen(PORT, host, function () {
-    console.log("Server started.......");
-  });
+
 });
 
 /*server 前端的程式碼*/
