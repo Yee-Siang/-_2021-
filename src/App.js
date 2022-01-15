@@ -98,6 +98,8 @@ function App() {
 
   /* 當前使用者的所有記帳紀錄 */
   const [MyCost, setMyCost] = useState([]);
+  //目前在哪個記帳業面
+  const [spend_p, setSpend_p] = useState(1);
   /* 當前使用者的所有備忘錄 */
   const [MemoData, setMemoData] = useState([]);
   const resetTodo = async (UserID) => {
@@ -280,10 +282,14 @@ function App() {
       setSystemMessage("New Cost has been created");
       setSystemDescription(Message);
       setSystemMessageType("success");
+      handleCheckMyCost(NowUserID);
+      setSpend_p(1);
     } else {
       setSystemMessage("New Cost creating failed");
       setSystemDescription("Some error happens !!");
       setSystemMessageType("error");
+      handleCheckMyCost(NowUserID);
+      setSpend_p(1);
     }
   };
 
@@ -326,6 +332,8 @@ function App() {
     setSystemMessage("Delete my cost success");
     setSystemDescription(Message);
     setSystemMessageType("info");
+    handleCheckMyCost(NowUserID);
+    setSpend_p(1);
   };
 
   /*刪除所有用戶所有記帳(2/4)*/
@@ -421,7 +429,7 @@ function App() {
           }}
           placeholder="Enter your UserID"
           prefix={<UserOutlined />}
-          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
+          style={{width: "20%", marginLeft: "40%", marginBottom: "3%"}}
         />
         {/* 輸入使用者密碼 */}
         <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>Please Enter Your Password</p>
@@ -432,7 +440,7 @@ function App() {
           }}
           placeholder="Enter your Password"
           prefix={<UserOutlined />}
-          style={{width: "40%", marginLeft: "30%", marginBottom: "2%"}}
+          style={{width: "20%", marginLeft: "40%", marginBottom: "1%"}}
           iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
         {/* 舊用戶登入(1/4) */}
@@ -440,12 +448,12 @@ function App() {
           onClick={handleUsersLogin}
           disabled={!LoginUserID || !LoginUserPassword}
           type="primary"
-          style={{width: "16%", marginLeft: "42%", marginBottom: "2%"}}
+          style={{width: "10%", marginLeft: "45%", marginBottom: "3%"}}
         >
           Login
         </Button>
         {/* 註冊按鈕 */}
-        <p style={{width: "40%",marginLeft:"30%", textAlign: "center"}}>First Time To エムエム ? Please Signup First</p>
+        <p style={{width: "40%",marginLeft:"30%", textAlign: "center"}}>First Time To エムエム ? Please Signup</p>
         <Button
           onClick={() => {
             setPageState("Signup");
@@ -460,7 +468,7 @@ function App() {
             setSystemMessageType("success");
           }}
           type="primary"
-          style={{width: "16%", marginLeft: "42%"}}
+          style={{width: "10%", marginLeft: "45%"}}
         >
           Signup
         </Button>
@@ -612,7 +620,6 @@ function App() {
   );
 
   //新增一筆記帳頁面
-  const [spend_p, setSpend_p] = useState(1);
   const NewCostPage = (
     <Layout.Content style={{ width: '98%', margin: "1%" }}>
       <p>Please Enter Your Cost Title*</p>
@@ -730,7 +737,7 @@ function App() {
           day: `${e[4][0]}-${e[4][1]}-${e[4][2]}`,
           key: e,
         }))}
-        pagination={{ pageSize: 6 }}
+        pagination={{ pageSize: 5 }}
       />
     </Layout.Content>
   );
