@@ -3,19 +3,17 @@ import "antd/dist/antd.css";
 import {
   Button,
   Input,
-  Tag,
-  Tooltip,
   Layout,
   Menu,
-  Breadcrumb,
   Descriptions,
-  Badge,
   DatePicker,
   InputNumber,
-  Select,
   Radio,
   Table,
   Alert,
+  message,
+  Modal,
+  Space
 } from "antd";
 import {
   UserOutlined,
@@ -33,6 +31,7 @@ import {
   CarOutlined,
   KeyOutlined,
   ToolOutlined,
+  EyeTwoTone,
 } from "@ant-design/icons";
 import axios from "./api";
 import moment from "moment";
@@ -99,6 +98,8 @@ function App() {
 
   /* 當前使用者的所有記帳紀錄 */
   const [MyCost, setMyCost] = useState([]);
+  //目前在哪個記帳業面
+  const [spend_p, setSpend_p] = useState(1);
   /* 當前使用者的所有備忘錄 */
   const [MemoData, setMemoData] = useState([]);
   const resetTodo = async (UserID) => {
@@ -131,14 +132,16 @@ function App() {
     });
     console.log(Message);
     if (SignupSuccess === "true") {
-      setSystemMessage("Signup success!!");
+      setSystemMessage("Signup success!! \n Now you can login and start!!");
+      setIsModalVisible(true);
       setSystemDescription("Now you can login and start!!");
       setSystemMessageType("success");
       //初始化學習功能的字典
       const { data } = await axios.post("/api/initWord", { user: SignupUserID });
       console.log(data.message);
     } else {
-      setSystemMessage("Signup failed!!");
+      setSystemMessage(Message);
+      setIsModalVisible(true);
       setSystemDescription(Message);
       setSystemMessageType("error");
     }
@@ -163,7 +166,7 @@ function App() {
 
     if (LoginSuccess === "true") {
       setHasLogin(true);
-      setPageState("Login");
+      setPageState("PersonalInfo");
       setNowUserID(UserID);
       setNowUserPassword(UserPassword);
       setNowNickname(Nickname);
@@ -181,11 +184,15 @@ function App() {
       resetTodo(UserID);
       //query words
       resetWord(UserID);
+      message.success("Login success!");
 
     } else {
       setSystemMessage("Login failed!!");
       setSystemDescription(Message);
+      setLoginUserID("");
+      setLoginUserPassword("");
       setSystemMessageType("error");
+      message.error("Login fail!");
     }
   };
 
@@ -242,10 +249,13 @@ function App() {
     console.log(Message);
     if (ChangePasswordSuccess === "true") {
       setNowUserPassword(NewUserPassword);
+      setIsModalVisible_3(true);
       setSystemMessage("Change Password success !!");
       setSystemDescription(Message);
       setSystemMessageType("success");
     } else {
+      setIsModalVisible_3(true);
+      setSystemDescription(Message);
       setSystemMessage("Change Password failed !!");
       setSystemDescription("Some error happens !!");
       setSystemMessageType("error");
@@ -272,10 +282,14 @@ function App() {
       setSystemMessage("New Cost has been created");
       setSystemDescription(Message);
       setSystemMessageType("success");
+      handleCheckMyCost(NowUserID);
+      setSpend_p(1);
     } else {
       setSystemMessage("New Cost creating failed");
       setSystemDescription("Some error happens !!");
       setSystemMessageType("error");
+      handleCheckMyCost(NowUserID);
+      setSpend_p(1);
     }
   };
 
@@ -318,6 +332,8 @@ function App() {
     setSystemMessage("Delete my cost success");
     setSystemDescription(Message);
     setSystemMessageType("info");
+    handleCheckMyCost(NowUserID);
+    setSpend_p(1);
   };
 
   /*刪除所有用戶所有記帳(2/4)*/
@@ -395,44 +411,47 @@ function App() {
     return sum(MyCost.map((e) => (!e[1] ? e[2] : 0)));
   };
 
-  //useEffect( () => { console.log( "" ) } )
-
   ///////////////////////////////////////////////////////////////////////////////
 
   //登入前歡迎頁面
   const WelcomePage = (
     <Layout.Content>
-      <div /* 輸入使用者帳號 */>
-        <p>To Login , Please Enter Your ID</p>
+      <h1 style={{ fontSize: "4rem", fontWeight: "10", textAlign: "center", lineHeight: "4rem", marginBottom: "3rem", marginTop: "3rem" }}>エムエム 2021α</h1>
+      {/* 輸入使用者帳號 */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}>
+        <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>To Login , Please Enter Your ID</p>
         <Input
+          value={LoginUserID}
           onChange={(e) => {
             setLoginUserID(e.target.value);
           }}
           placeholder="Enter your UserID"
           prefix={<UserOutlined />}
+          style={{width: "20%", marginLeft: "40%", marginBottom: "1%"}}
         />
-      </div>
-      <div /* 輸入使用者密碼 */>
-        <p>Please Enter Your Password</p>
-        <Input
+        {/* 輸入使用者密碼 */}
+        <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>Please Enter Your Password</p>
+        <Input.Password
+        value={LoginUserPassword}
           onChange={(e) => {
             setLoginUserPassword(e.target.value);
           }}
           placeholder="Enter your Password"
           prefix={<UserOutlined />}
+          style={{width: "20%", marginLeft: "40%", marginBottom: "1%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
-      </div>
-      <div /* 舊用戶登入(1/4) */>
+        {/* 舊用戶登入(1/4) */}
         <Button
           onClick={handleUsersLogin}
           disabled={!LoginUserID || !LoginUserPassword}
           type="primary"
+          style={{width: "10%", marginLeft: "45%", marginBottom: "3%"}}
         >
           Login
         </Button>
-      </div>
-      <div /* 註冊按鈕 */>
-        <p>First Time To エムエム ? Please Signup First</p>
+        {/* 註冊按鈕 */}
+        <p style={{width: "40%",marginLeft:"30%", textAlign: "center"}}>First Time To エムエム ? Please Signup</p>
         <Button
           onClick={() => {
             setPageState("Signup");
@@ -447,12 +466,16 @@ function App() {
             setSystemMessageType("success");
           }}
           type="primary"
+          style={{width: "10%", marginLeft: "45%"}}
         >
           Signup
         </Button>
       </div>
       
+<<<<<<< HEAD
       
+=======
+>>>>>>> jason_style
     </Layout.Content>
   );
 
@@ -568,8 +591,8 @@ function App() {
   //個人資訊頁面
   const PersonalInfoPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>About Myself</p>
-      <Descriptions bordered column={1}>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>About You</p>
+      <Descriptions bordered column={1} style={{width: "98%", marginLeft:"1%", marginLeft:"1%"}}>
         <Descriptions.Item label="UserId">{NowUserID}</Descriptions.Item>
         <Descriptions.Item label="Password">
           {NowUserPassword}
@@ -593,64 +616,14 @@ function App() {
   //備忘錄頁面
   const MemoPage = (
     <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Memo</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Memo</p>
       <Memo user={NowUserID} axios={axios} data={MemoData}></Memo>
-    </Layout.Content>
-  );
-
-  //記帳本頁面
-  const SpendingPage = (
-    <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Spending</p>
-      <div>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={() => {
-            setPageState("NewCost");
-            setNewCostTitle("");
-            setNewCostMoney("");
-            setNewCostTag("");
-            setNewCostDay([
-              String(Date()).split(" ")[3],
-              MonthToNumber(String(Date()).split(" ")[1]),
-              String(Date()).split(" ")[2],
-            ]);
-            setNewCostIsOutcome(true);
-            setSystemMessage("You can record your income or outcome here");
-            setSystemDescription("Please enter some detail about the cost.");
-            setSystemMessageType("success");
-          }}
-          type="danger"
-        >
-          Create New Cost
-        </Button>
-      </div>
-      <div /*從資料庫取得目前使用者記帳紀錄(1/4)*/>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={() => {
-            setPageState("CheckMyCost");
-            handleCheckMyCost(NowUserID);
-          }}
-          type="primary"
-        >
-          Check My Cost
-        </Button>
-      </div>
-      <div /* 刪除個人所有記帳紀錄(1/4) */>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={handleDeleteMyCost} type="danger">
-          Delete My Cost
-        </Button>
-      </div>
     </Layout.Content>
   );
 
   //新增一筆記帳頁面
   const NewCostPage = (
-    <Layout.Content>
-      <p>This is NewCost Page</p>
+    <Layout.Content style={{ width: '98%', margin: "1%" }}>
       <p>Please Enter Your Cost Title*</p>
       <Input
         onChange={(e) => {
@@ -658,6 +631,7 @@ function App() {
         }}
         placeholder="Enter your Cost Title"
         prefix={<AccountBookOutlined />}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Money*</p>
       <InputNumber
@@ -676,7 +650,7 @@ function App() {
           !e ? setNewCostMoney(0) : setNewCostMoney(e);
         }}
         placeholder="Enter your Cost Money"
-        style={{ width: "500px" }}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Tag</p>
       <Input
@@ -685,6 +659,7 @@ function App() {
         }}
         placeholder="Enter your Tag"
         prefix={<AimOutlined />}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Day</p>
       <DatePicker
@@ -702,12 +677,12 @@ function App() {
             ]);
         }}
         placeholder="Enter your Cost Day, left blank is today"
-        style={{ width: "500px" }}
+        style={{width: "80%", marginBottom: "2%"}}
       />
       <div /* 新增一筆記帳(1/4) */>
         <Button
-          onClick={handleCreateNewCost}
-          type="danger"
+          onClick={() => {handleCreateNewCost();handleCheckMyCost(NowUserID);setSpend_p(1)}}
+          type="primary"
           disabled={!NewCostTitle || !NewCostMoney}
         >
           Submit
@@ -718,8 +693,20 @@ function App() {
 
   //使用者記帳紀錄頁面
   const CheckMyCostPage = (
-    <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Accouting</p>
+    <Layout.Content style={{ width: '98%', margin: "1%" }}>
+      <Alert
+        message={`Your total outcome is : ${handleTotalOutcome(MyCost)}`}
+        type="info"
+      />
+      <Alert
+        message={`Your total income is : ${handleTotalIncome(MyCost)}`}
+        type="info"
+      />
+      <Alert
+        message={`Your net debt is : ${handleTotalOutcome(MyCost) - handleTotalIncome(MyCost)
+          }`}
+        type="info"
+      />
       <Table
         columns={[
           { title: "Title", dataIndex: "title" },
@@ -752,23 +739,55 @@ function App() {
           day: `${e[4][0]}-${e[4][1]}-${e[4][2]}`,
           key: e,
         }))}
+        pagination={{ pageSize: 5 }}
       />
-      <Alert
-        message={`Your total outcome is : ${handleTotalOutcome(MyCost)}`}
-        type="info"
-        showIcon
-      />
-      <Alert
-        message={`Your total income is : ${handleTotalIncome(MyCost)}`}
-        type="info"
-        showIcon
-      />
-      <Alert
-        message={`Your net debt is : ${handleTotalOutcome(MyCost) - handleTotalIncome(MyCost)
-          }`}
-        type="info"
-        showIcon
-      />
+    </Layout.Content>
+  );
+  //記帳本頁面
+  const SpendingPage = (
+    <Layout.Content>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Spending</p>
+      <Space style={{margin:"1%"}}>
+        <Button
+          onClick={() => {
+            setSpend_p(0);
+            setNewCostTitle("");
+            setNewCostMoney("");
+            setNewCostTag("");
+            setNewCostDay([
+              String(Date()).split(" ")[3],
+              MonthToNumber(String(Date()).split(" ")[1]),
+              String(Date()).split(" ")[2],
+            ]);
+            setNewCostIsOutcome(true);
+            setSystemMessage("You can record your income or outcome here");
+            setSystemDescription("Please enter some detail about the cost.");
+            setSystemMessageType("success");
+          }}
+          type="primary"
+        >
+          Create New Cost
+        </Button>
+      
+      <div /*從資料庫取得目前使用者記帳紀錄(1/4)*/>
+        <Button
+          onClick={() => {
+            setSpend_p(1);
+            handleCheckMyCost(NowUserID);
+          }}
+          type="primary"
+        >
+          Check My Cost
+        </Button>
+      </div>
+      <div /* 刪除個人所有記帳紀錄(1/4) */>
+        <Button
+          onClick={() => {handleDeleteMyCost();handleCheckMyCost(NowUserID);setSpend_p(1)}} type="danger">
+          Delete My Cost
+        </Button>
+      </div>
+      </Space>
+      {spend_p == 1? CheckMyCostPage:NewCostPage}
     </Layout.Content>
   );
 
@@ -782,7 +801,7 @@ function App() {
   //學習功能頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
   const LearningPage = (
     <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Learning</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Learning</p>
       <Learning user={NowUserID} axios={axios} data={WordData}></Learning>
     </Layout.Content>
   );
@@ -790,7 +809,7 @@ function App() {
   //一般設定頁面
   const NormalSettingPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Changing Personal Info</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Changing Personal Info</p>
       <div>
         <Button
           onClick={() => {
@@ -815,27 +834,28 @@ function App() {
   //修改個人資料頁面
   const ChangePersonalInfoPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Changing Personal Info</p>
-      <div /* 修改個人資料(1/4) */>
-        <p>You can change your Nickname here*</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Changing Personal Info</p>
+      {/* 修改個人資料(1/4) */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your Nickname here*</p>
         <Input
           onChange={(e) => {
             setNewNickname(e.target.value);
           }}
           placeholder="Enter your NewNickname"
           defaultValue={NowNickname}
-          prefix={<EyeInvisibleOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your School here</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your School here</p>
         <Input
           onChange={(e) => {
             setNewSchool(e.target.value);
           }}
           placeholder="Enter your NewSchool (optional) "
           defaultValue={NowSchool}
-          prefix={<EyeInvisibleOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your Birthday here</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your Birthday here</p>
         <DatePicker
           onChange={(e) => {
             !e
@@ -855,9 +875,9 @@ function App() {
                 "YYYY-MM-DD"
               )
           }
-          style={{ width: "500px" }}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your own Signature!</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your own Signature!</p>
         <Input.TextArea
           onChange={(e) => {
             setNewAboutMe(e.target.value);
@@ -865,11 +885,13 @@ function App() {
           placeholder="Enter your NewAboutMe (optional) "
           defaultValue={NowAboutMe}
           rows={3}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
         <Button
           onClick={handleChangePersonalInfo}
           disabled={!NewNickname}
           type="primary"
+          style={{width: "16%", marginLeft: "42%"}}
         >
           Submit
         </Button>
@@ -880,7 +902,7 @@ function App() {
   //帳號設定頁面
   const AccountSettingPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Change Password</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Change Password</p>
       <div>
         <Button
           onClick={() => {
@@ -903,29 +925,36 @@ function App() {
   //修改密碼頁面
   const ChangePasswordPage = (
     <Layout.Content>
-      <p style={{ fontSize: "1.5rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Change Password</p>
-      <div /* 修改密碼(1/4) */>
-        <p>Change your password here</p>
-        <p>Please your Old password </p>
-        <Input
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Change Password</p>
+      {/* 修改密碼(1/4) */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}> 
+        <p style={{width: "40%",marginLeft:"30%"}}>Please your Old password </p>
+        <Input.Password
+          value={OldUserPassword}
           onChange={(e) => {
             setOldUserPassword(e.target.value);
           }}
           placeholder="Enter your OldPassword"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
-        <p>Please your New password </p>
-        <Input
+        <p style={{width: "40%",marginLeft:"30%"}}>Please your New password </p>
+        <Input.Password
+          value={NewUserPassword}
           onChange={(e) => {
             setNewUserPassword(e.target.value);
           }}
           placeholder="Enter your NewPassword"
-          prefix={<EyeInvisibleOutlined />}
+          prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
         <Button
           onClick={handleChangePassword}
           disabled={!OldUserPassword || !NewUserPassword}
           type="primary"
+          style={{width: "16%", marginLeft: "42%"}}
         >
           Submit
         </Button>
@@ -980,20 +1009,13 @@ function App() {
   const PageSider = () => {
     if (HasLogin === false) {
       return (
-        <Layout.Sider
-          collapsible
-          onCollapse={handleSiderCollapse}
-          style={{ background: "#98BAE7", height: "auto" }}
-        >
-          <p>MM_2021_Alpha</p>
-        </Layout.Sider>
+       <></>
       );
     } else {
       return (
         <Layout.Sider
           collapsible
           onCollapse={handleSiderCollapse}
-          style={{ background: "#98BAE7", height: "auto" }}
         >
           <p
             style={
@@ -1006,21 +1028,9 @@ function App() {
           </p>
           <Menu
             theme="dark" /* 各種功能和登出按鈕 */
-            defaultSelectedKeys={["Login"]}
+            defaultSelectedKeys={["PersonalInfo"]}
             mode="inline"
           >
-            <Menu.Item
-              onClick={() => {
-                setPageState("Login");
-                setSystemMessage(`Welcome back , ${NowUserID}`);
-                setSystemDescription("You are free to choose the service");
-                setSystemMessageType("success");
-              }}
-              key="Login"
-              icon={<SmileOutlined />}
-            >
-              Welcome
-            </Menu.Item>
             <Menu.Item
               onClick={() => {
                 setPageState("PersonalInfo");
@@ -1033,38 +1043,30 @@ function App() {
             >
               Personal Info
             </Menu.Item>
-
-            <Menu.SubMenu /* 提醒事項的子選單，分為備忘錄（memo）跟記帳區（spending）*/
-              title="Reminder"
-              key="Reminder"
-              icon={<AlertOutlined />}
+            <Menu.Item
+              onClick={() => {
+                setPageState("Memo");
+                setSystemMessage("This is Memo Page");
+                setSystemDescription("");
+                setSystemMessageType("success");
+              }}
+              key="Memo"
+              icon={<AuditOutlined />}
             >
-              <Menu.Item
-                onClick={() => {
-                  setPageState("Memo");
-                  setSystemMessage("This is Memo Page");
-                  setSystemDescription("");
-                  setSystemMessageType("success");
-                }}
-                key="Memo"
-                icon={<AuditOutlined />}
-              >
-                Memo
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  setPageState("Spending");
-                  setSystemMessage("This is Spending Page");
-                  setSystemDescription("You can manage your cost here.");
-                  setSystemMessageType("success");
-                }}
-                key="Spending"
-                icon={<DollarOutlined />}
-              >
-                Spending
-              </Menu.Item>
-            </Menu.SubMenu>
-
+              Memo
+            </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                setPageState("Spending");
+                setSystemMessage("This is Spending Page");
+                setSystemDescription("You can manage your cost here.");
+                setSystemMessageType("success");
+              }}
+              key="Spending"
+              icon={<DollarOutlined />}
+            >
+              Spending
+            </Menu.Item>
             <Menu.Item
               onClick={() => {
                 setPageState("Learning");
@@ -1085,9 +1087,13 @@ function App() {
             >
               <Menu.Item
                 onClick={() => {
-                  setPageState("NormalSetting");
-                  setSystemMessage("This is normal setting page");
-                  setSystemDescription("Do you want yo modify somthing?");
+                  setPageState("ChangePersonalInfo");
+                  setNewNickname(NowNickname);
+                  setNewSchool(NowSchool);
+                  setNewBirthday(NowBirthday);
+                  setNewAboutMe(NowAboutMe);
+                  setSystemMessage("You can change your PersonalInfo here");
+                  setSystemDescription("* implies needed");
                   setSystemMessageType("success");
                 }}
                 key="NormalSetting"
@@ -1097,9 +1103,11 @@ function App() {
               </Menu.Item>
               <Menu.Item
                 onClick={() => {
-                  setPageState("AccountSetting");
-                  setSystemMessage("This is AccountSetting Page");
-                  setSystemDescription("Do you want yo modify somthing?");
+                  setPageState("ChangePassword");
+                  setOldUserPassword("");
+                  setNewUserPassword("");
+                  setSystemMessage("You can change your password here");
+                  setSystemDescription("Please enter your old and new PW");
                   setSystemMessageType("success");
                 }}
                 key="AccountSetting"
@@ -1111,10 +1119,7 @@ function App() {
 
             <Menu.Item
               onClick={() => {
-                setPageState("Signout");
-                setSystemMessage("Are you sure to leave?");
-                setSystemDescription("");
-                setSystemMessageType("success");
+                setIsModalVisible_2(true);
               }}
               key="Signout"
               icon={<CarOutlined />}
@@ -1165,25 +1170,71 @@ function App() {
   //底部訊息，包含系統發送給前端的任何訊息
   const PageFooter = () => {
     return (
-      <Layout.Content style={{ background: "#B8E4F0" }}>
+      <Layout.Footer style={{ background: "#B8E4F0", height: "auto"}}>
         <Alert
           message={SystemMessage}
           type={SystemMessageType}
           showIcon
           description={SystemDescription}
         />
-      </Layout.Content>
+      </Layout.Footer>
     );
   };
+  //彈出式視窗
+  //註冊新用戶的
+  const [ isModalVisible,  setIsModalVisible] = useState(false);
+  const handleOk = () => {
+    setIsModalVisible(false);
+    setPageState("Welcome");
+  };
+  //登出的
+  const [ isModalVisible_2,  setIsModalVisible_2] = useState(false);
+  const handleOk_2 = () => {
+    setIsModalVisible_2(false);
+    setPageState("Welcome");
+    setLoginUserID("");
+    setLoginUserPassword("");
+    setHasLogin(false);
+    setNowUserID("");
+    setNowUserPassword("");
+    setNowNickname("");
+    setNowSchool("");
+    setNowBirthday(["", "", ""]);
+    setNowAboutMe("");
+    setSystemMessage("Welcome to MM_2021alpha");
+    setSystemDescription("You are signup");
+    setSystemMessageType("success");
+  };
 
+  const handleCancel_2 = () => {
+    setIsModalVisible_2(false);
+  }
+  //改帳密
+  const [ isModalVisible_3,  setIsModalVisible_3] = useState(false);
+  const handleOk_3 = () => {
+    setIsModalVisible_3(false);
+    //setPageState("PersonalInfo");
+    setOldUserPassword("");
+    setNewUserPassword("");
+  };
   //回傳側邊選單+頁面內容+底部訊息
   return (
     <Layout>
       {PageSider()}
-      <Layout>
-        <Layout style={{ background: "#CCDDEE" }}>{NowPageContent()}</Layout>
-        {PageFooter()}
+      <Layout style={{height: "100vh", background: "#CCDDEE"}}>
+        {NowPageContent()}
+        {/*PageFooter()*/}
       </Layout>
+      <Modal title="System message" visible={isModalVisible} closable={false} footer={[<Button key="Got it" onClick={handleOk}>Got it</Button>]}>
+        <h1>{SystemMessage}</h1>
+      </Modal>
+      <Modal title="System message" visible={isModalVisible_3} closable={false} footer={[<Button key="Got it" onClick={handleOk_3}>Got it</Button>]}>
+        <h1>{SystemMessage}</h1>
+      </Modal>
+      <Modal title="System message" visible={isModalVisible_2} closable={false} 
+             onOk={handleOk_2} onCancel={handleCancel_2} okText={"Yes"} cancelText={"No"}>
+        <h1>Sure to logout?</h1>
+      </Modal>
     </Layout>
   );
 }
