@@ -34,6 +34,10 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(bodyParser.json());
 
+
+server.applyMiddleware({ app });
+
+
 /* 確定有連到資料庫 */
 db.once("open", () => {
   console.log("MongoDB connected!");
