@@ -30,6 +30,7 @@ import {
   CarOutlined,
   KeyOutlined,
   ToolOutlined,
+  EyeTwoTone,
 } from "@ant-design/icons";
 import axios from "./api";
 import moment from "moment";
@@ -423,7 +424,7 @@ function App() {
         />
         {/* 輸入使用者密碼 */}
         <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>Please Enter Your Password</p>
-        <Input
+        <Input.Password
         value={LoginUserPassword}
           onChange={(e) => {
             setLoginUserPassword(e.target.value);
@@ -431,6 +432,7 @@ function App() {
           placeholder="Enter your Password"
           prefix={<UserOutlined />}
           style={{width: "40%", marginLeft: "30%", marginBottom: "2%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
         {/* 舊用戶登入(1/4) */}
         <Button
@@ -920,7 +922,7 @@ function App() {
       {/* 修改密碼(1/4) */}
       <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}> 
         <p style={{width: "40%",marginLeft:"30%"}}>Please your Old password </p>
-        <Input
+        <Input.Password
           value={OldUserPassword}
           onChange={(e) => {
             setOldUserPassword(e.target.value);
@@ -928,9 +930,10 @@ function App() {
           placeholder="Enter your OldPassword"
           prefix={<UserOutlined />}
           style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
         <p style={{width: "40%",marginLeft:"30%"}}>Please your New password </p>
-        <Input
+        <Input.Password
           value={NewUserPassword}
           onChange={(e) => {
             setNewUserPassword(e.target.value);
@@ -938,6 +941,7 @@ function App() {
           placeholder="Enter your NewPassword"
           prefix={<UserOutlined />}
           style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
         <Button
           onClick={handleChangePassword}
