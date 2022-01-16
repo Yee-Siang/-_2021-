@@ -13,6 +13,8 @@ import learningApi from "./server/LearningBackend.js";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+const Koa = require('koa');
+const serve = require('koa-static');
 ///////////////////////////////////////////////////////////////////////////////
 
 /* 連接資料庫 */
@@ -29,20 +31,26 @@ const db = mongoose.connection;
 db.on("error", (e) => {
   throw new Error("DBConnectionError" + e);
 });
-const app = express();
+//const app = express();
+const app = new Koa();
 const server = http.createServer(app);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors());
+const PORT = process.env.port || 4000;
+const staticPath = './';
 
+app.use(serve(path.join(__dirname, staticPath)));
 
+app.listen(PORT, () => {
+  console.log(`[Message]: Server is listening on port ${PORT}`);
+});
 
 
 
 /* 確定有連到資料庫 */
 db.once("open", () => {
   console.log("MongoDB connected!");
-  const PORT = process.env.port || 4000;
   const host = '0.0.0.0';
   server.listen(PORT, host, () => {
     console.log(`Listening on ${PORT}`);
