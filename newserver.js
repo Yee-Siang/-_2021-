@@ -35,10 +35,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors());
 
-
-
-
-
 /* 確定有連到資料庫 */
 db.once("open", () => {
   console.log("MongoDB connected!");
@@ -50,7 +46,7 @@ db.once("open", () => {
 
 });
 
-/*server 前端的程式碼*/
+/* server 前端的程式碼 */
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, "build")));
 app.get("/*", function (req, res) {
