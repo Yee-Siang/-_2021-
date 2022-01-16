@@ -10,7 +10,7 @@
     - change your .env according to .env.default, and place in the same dictionary.
     - open a terminal and type following command
         - yarn install
-        - yarn server (Remember to change the .env.default)
+        - yarn server
         - yarn start
 
 - Introduce : エムエム 2021α is your online housekeeper! Following are its main features
