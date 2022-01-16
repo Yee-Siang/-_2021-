@@ -45,11 +45,11 @@ function App() {
   /* PageState 為顯示的界面 */
   const [PageState, setPageState] = useState("Welcome");
 
-  /* LoginUserID , LoginUserPassword 為登入 input 欄位中的帳密 */
+  /* LoginUserID , LoginUserPassword 為登入 input 欄位中的帳號與驗證碼 */
   const [LoginUserID, setLoginUserID] = useState("");
   const [LoginUserPassword, setLoginUserPassword] = useState("");
 
-  /* 註冊 input 欄位中的帳密及基本資料 */
+  /* 註冊 input 欄位中的帳號與驗證碼及基本資料 */
   const [SignupUserID, setSignupUserID] = useState("");
   const [SignupUserPassword, setSignupUserPassword] = useState("");
   const [SignupNickname, setSignupNickname] = useState("");
@@ -60,7 +60,7 @@ function App() {
   /* HasLogin 為目前已經登入 */
   const [HasLogin, setHasLogin] = useState(false);
 
-  /* 目前已經登入的使用者的帳密及基本資料 */
+  /* 目前已經登入的使用者的帳號與驗證碼及基本資料 */
   const [NowUserID, setNowUserID] = useState("");
   const [NowUserPassword, setNowUserPassword] = useState("");
   const [NowNickname, setNowNickname] = useState("");
@@ -68,7 +68,7 @@ function App() {
   const [NowBirthday, setNowBirthday] = useState(["", "", ""]);
   const [NowAboutMe, setNowAboutMe] = useState("");
 
-  /* OldUserPassword , NewUserPassword 為使用者改密碼時的的舊/新密碼 */
+  /* OldUserPassword , NewUserPassword 為使用者改驗證碼時的的舊/新驗證碼 */
   const [OldUserPassword, setOldUserPassword] = useState("");
   const [NewUserPassword, setNewUserPassword] = useState("");
 
@@ -236,7 +236,7 @@ function App() {
     }
   };
 
-  /*修改密碼(2/4)*/
+  /*修改驗證碼(2/4)*/
   const handleChangePassword = async () => {
     console.log("FrontendNowChangePassword");
     const {
@@ -429,7 +429,7 @@ function App() {
           prefix={<UserOutlined />}
           style={{width: "20%", marginLeft: "40%", marginBottom: "1%"}}
         />
-        {/* 輸入使用者密碼 */}
+        {/* 輸入使用者驗證碼 */}
         <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>Please Enter Your Password</p>
         <Input.Password
         value={LoginUserPassword}
@@ -497,7 +497,7 @@ function App() {
           style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
-      <div /* 註冊輸入密碼 */>
+      <div /* 註冊輸入驗證碼 */>
         <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your Password *</p>
         <Input.Password
         value={SignupUserPassword}
@@ -922,11 +922,11 @@ function App() {
     </Layout.Content>
   );
 
-  //修改密碼頁面
+  //修改驗證碼頁面
   const ChangePasswordPage = (
     <Layout.Content>
       <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Change Password</p>
-      {/* 修改密碼(1/4) */}
+      {/* 修改驗證碼(1/4) */}
       <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}> 
         <p style={{width: "40%",marginLeft:"30%"}}>Please your Old password </p>
         <Input.Password
@@ -1083,7 +1083,7 @@ function App() {
               Learning
             </Menu.Item>
 
-            <Menu.SubMenu /* 設定的子選單，分為一般設定（改界面和使用者基本資料）跟帳號設定（改密碼）*/
+            <Menu.SubMenu /* 設定的子選單，分為一般設定（改界面和使用者基本資料）跟帳號設定（改驗證碼）*/
               title="Setting"
               key="Setting"
               icon={<SettingOutlined />}
@@ -1212,7 +1212,7 @@ function App() {
   const handleCancel_2 = () => {
     setIsModalVisible_2(false);
   }
-  //改帳密
+  //改帳號與驗證碼
   const [ isModalVisible_3,  setIsModalVisible_3] = useState(false);
   const handleOk_3 = () => {
     setIsModalVisible_3(false);
