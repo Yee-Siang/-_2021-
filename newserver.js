@@ -38,6 +38,7 @@ app.use(cors());
 db.once("open", () => {
   console.log("MongoDB connected!");
   const PORT = process.env.port || 4000;
+  app.set("port", PORT);
   server.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
   });
