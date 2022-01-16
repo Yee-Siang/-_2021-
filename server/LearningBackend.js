@@ -1,4 +1,4 @@
-import Word from "../model/word";
+import Word from "../model/word.js";
 import diction from "../diction.js" ;
 function learningApi(app) {
     //創建新使用者時初始化字典

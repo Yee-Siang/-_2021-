@@ -1,4 +1,4 @@
-import Todo from "../model/todo";
+import Todo from "../model/todo.js";
 
 function MemoApi(app) {
     app.post("/api/newTodo", async(req, res) => {

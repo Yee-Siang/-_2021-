@@ -2,6 +2,7 @@
   "name": "final",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
@@ -26,10 +27,9 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "nodemon server.js --ext js --exec babel-node",
+    "start_react": "react-scripts start",
+    "build": "webpack --config webpack.config.js",
     "server": "nodemon server/server.js --ext js --exec babel-node"
   },
   "eslintConfig": {
@@ -55,6 +55,7 @@
     "@babel/core": "^7.16.7",
     "@babel/node": "^7.16.8",
     "@babel/preset-env": "^7.16.8",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "webpack-cli": "^4.9.1"
   }
 }
