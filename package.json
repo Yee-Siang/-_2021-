@@ -29,7 +29,7 @@
   "scripts": {
     "start": "nodemon server.js --ext js --exec babel-node",
     "start_react": "react-scripts start",
-    "build": "webpack --config webpack.config.js",
+    "build": "react-scripts build",
     "server": "nodemon server/server.js --ext js --exec babel-node"
   },
   "eslintConfig": {
