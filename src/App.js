@@ -1068,6 +1068,7 @@ function App() {
                 setSystemMessage("This is Spending Page");
                 setSystemDescription("You can manage your cost here.");
                 setSystemMessageType("success");
+                handleCheckMyCost();
               }}
               key="Spending"
               icon={<DollarOutlined />}
