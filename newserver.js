@@ -47,10 +47,12 @@ db.once("open", () => {
 
 /* server 前端的程式碼 */
 const __dirname = dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "./")));
+/*
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
+*/
 ///////////////////////////////////////////////////////////////////////////////
 /* 代辦事項的 api */
 MemoApi(app);
