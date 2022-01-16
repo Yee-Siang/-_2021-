@@ -485,50 +485,55 @@ function App() {
   //註冊頁面
   const SignupPage = (
     <Layout.Content>
-      <p>Welcome Using our App</p>
-      <p>This is Signup Page</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Sign up</p>
       <div /* 註冊輸入帳號 */>
-        <p>Please Enter Your ID *</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your ID *</p>
         <Input
           onChange={(e) => {
             setSignupUserID(e.target.value);
           }}
           placeholder="Enter your UserId"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
       <div /* 註冊輸入密碼 */>
-        <p>Please Enter Your Password *</p>
-        <Input
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your Password *</p>
+        <Input.Password
+        value={SignupUserPassword}
           onChange={(e) => {
             setSignupUserPassword(e.target.value);
           }}
           placeholder="Enter your UserPassword"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
       </div>
       <div /* 註冊輸入暱稱 */>
-        <p>Please Enter Your Nickname *</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your Nickname *</p>
         <Input
           onChange={(e) => {
             setSignupNickname(e.target.value);
           }}
           placeholder="Enter your Nickname"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
       <div /* 註冊輸入學校 */>
-        <p>Please Enter Your School</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your School</p>
         <Input
           onChange={(e) => {
             setSignupSchool(e.target.value);
           }}
           placeholder="Enter your School (optional)"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
       <div /* 註冊輸入生日 */>
-        <p>Please Enter Your Birthday</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your Birthday</p>
         <DatePicker
           onChange={(e) => {
             !e
@@ -540,22 +545,23 @@ function App() {
               ]);
           }}
           placeholder="Enter your Birthday (optional)"
-          style={{ width: "500px" }}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
 
       <div /* 註冊輸入個人簡介 */>
-        <p>We want to know you more,please enter something</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>We want to know you more,please enter something</p>
         <Input.TextArea
           onChange={(e) => {
             setSignupAboutMe(e.target.value);
           }}
           placeholder="About me ... (optional)"
           rows={3}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "2%"}}
         />
       </div>
 
-      <div /* 註冊新用戶(1/4) */>
+      <Space /* 註冊新用戶(1/4) */ style={{width: "100%", display: "flex", justifyContent: "center"}}>
         <Button
           type="primary"
           onClick={handleCreateNewUser}
@@ -563,8 +569,6 @@ function App() {
         >
           Submit
         </Button>
-      </div>
-      <div /* 放棄註冊 */>
         <Button
           type="danger"
           onClick={() => {
@@ -580,7 +584,7 @@ function App() {
         >
           Go back
         </Button>
-      </div>
+      </Space>
     </Layout.Content>
   );
 
@@ -1045,6 +1049,8 @@ function App() {
                 setSystemMessage("This is Memo Page");
                 setSystemDescription("");
                 setSystemMessageType("success");
+                //query todos
+                resetTodo(NowUserID);
               }}
               key="Memo"
               icon={<AuditOutlined />}
@@ -1069,6 +1075,7 @@ function App() {
                 setSystemMessage("This is Learning Page");
                 setSystemDescription("");
                 setSystemMessageType("success");
+                resetWord(NowUserID);
               }}
               key="Learning"
               icon={<ReadOutlined />}
