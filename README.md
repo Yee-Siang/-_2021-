@@ -7,10 +7,12 @@
 - Demo video : 
 
 - Usage :
-    - change your .env according to .env.default, and place in the same dictionary.
-    - open a terminal and type following command
+    - clone our repo
+    - change your .env according to .env.default, and place in the same layer.
+    - open a terminal and type following command in the repo :
         - yarn install
         - yarn server
+    - open another ternimal and go to the same dictionary and type :
         - yarn start
 
 - Introduce : エムエム 2021α is your online housekeeper! Following are its main features
@@ -22,6 +24,6 @@
     - Setting : set your personal informantions & password.
 
 - Collabrate :
-    - 鐘郁翔 :
+    - 鐘郁翔 : Deploy, Video making
     - 黃政勛 : Memo page, Learning page, Frontend decoration
-    - 簡宏哲 : 
+    - 簡宏哲 : Login page, signup page, Spending page, Frontend structure
