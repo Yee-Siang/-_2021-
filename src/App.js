@@ -227,11 +227,15 @@ function App() {
       setNowBirthday(NewBirthday);
       setNowAboutMe(NewAboutMe);
       setSystemMessage("Change PersonalInfo success !!");
+      setPageState("PersonalInfo");
+      message.success("Change PersonalInfo success !!");
+      
       setSystemDescription(Message);
       setSystemMessageType("success");
     } else {
       setSystemMessage("Change PersonalInfo failed !!");
       setSystemDescription("Some error happens !!");
+      message.success("Change Password error !!");
       setSystemMessageType("error");
     }
   };
@@ -258,6 +262,7 @@ function App() {
       setSystemDescription(Message);
       setSystemMessage("Change Password failed !!");
       setSystemDescription("Some error happens !!");
+      message.error("Change Password error !!");
       setSystemMessageType("error");
     }
   };
@@ -928,7 +933,7 @@ function App() {
       <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Change Password</p>
       {/* 修改驗證碼(1/4) */}
       <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}> 
-        <p style={{width: "40%",marginLeft:"30%"}}>Please your Old password </p>
+        <p style={{width: "40%",marginLeft:"30%"}}>Please enter your Old password </p>
         <Input.Password
           value={OldUserPassword}
           onChange={(e) => {
@@ -939,7 +944,7 @@ function App() {
           style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
           iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
-        <p style={{width: "40%",marginLeft:"30%"}}>Please your New password </p>
+        <p style={{width: "40%",marginLeft:"30%"}}>Please enter your New password </p>
         <Input.Password
           value={NewUserPassword}
           onChange={(e) => {
