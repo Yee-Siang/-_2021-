@@ -39,6 +39,8 @@ import { sum } from "lodash";
 import Memo from "./memo"
 import Learning from "./learning";
 
+console.log(new URL(window.location.href));
+
 function App() {
   ///////////////////////////////////////////////////////////////////////////////
 
