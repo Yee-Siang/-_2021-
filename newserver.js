@@ -47,6 +47,7 @@ db.once("open", () => {
 
 /* server 前端的程式碼 */
 const __dirname = dirname(fileURLToPath(import.meta.url));
+console.log(__dirname);
 app.use(express.static(path.join(__dirname, "./")));
 /*
 app.get("/*", function (req, res) {
