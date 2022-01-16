@@ -38,8 +38,7 @@ app.use(cors());
 db.once("open", () => {
   console.log("MongoDB connected!");
   const PORT = process.env.port || 4000;
-  const host = '0.0.0.0';
-  server.listen((process.env.PORT || 5000), () => {
+  server.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
   });
 
@@ -48,12 +47,10 @@ db.once("open", () => {
 /* server 前端的程式碼 */
 const __dirname = dirname(fileURLToPath(import.meta.url));
 console.log(__dirname);
-app.use(express.static(path.join(__dirname, "./")));
-/*
+app.use(express.static(path.join(__dirname, "build")));
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
-*/
 ///////////////////////////////////////////////////////////////////////////////
 /* 代辦事項的 api */
 MemoApi(app);
