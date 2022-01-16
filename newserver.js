@@ -39,7 +39,7 @@ db.once("open", () => {
   console.log("MongoDB connected!");
   const PORT = process.env.port || 4000;
   const host = '0.0.0.0';
-  server.listen(PORT, host, () => {
+  server.listen((process.env.PORT || 5000), () => {
     console.log(`Listening on ${PORT}`);
   });
 
