@@ -12,7 +12,8 @@ import {
   Table,
   Alert,
   message,
-  Modal
+  Modal,
+  Space
 } from "antd";
 import {
   UserOutlined,
@@ -30,12 +31,13 @@ import {
   CarOutlined,
   KeyOutlined,
   ToolOutlined,
+  EyeTwoTone,
 } from "@ant-design/icons";
-import axios from "./api.js";
+import axios from "./api";
 import moment from "moment";
 import { sum } from "lodash";
-import Memo from "./memo.js"
-import Learning from "./learning.js";
+import Memo from "./memo"
+import Learning from "./learning";
 
 function App() {
   ///////////////////////////////////////////////////////////////////////////////
@@ -43,11 +45,11 @@ function App() {
   /* PageState 為顯示的界面 */
   const [PageState, setPageState] = useState("Welcome");
 
-  /* LoginUserID , LoginUserPassword 為登入 input 欄位中的帳密 */
+  /* LoginUserID , LoginUserPassword 為登入 input 欄位中的帳號與驗證碼 */
   const [LoginUserID, setLoginUserID] = useState("");
   const [LoginUserPassword, setLoginUserPassword] = useState("");
 
-  /* 註冊 input 欄位中的帳密及基本資料 */
+  /* 註冊 input 欄位中的帳號與驗證碼及基本資料 */
   const [SignupUserID, setSignupUserID] = useState("");
   const [SignupUserPassword, setSignupUserPassword] = useState("");
   const [SignupNickname, setSignupNickname] = useState("");
@@ -58,7 +60,7 @@ function App() {
   /* HasLogin 為目前已經登入 */
   const [HasLogin, setHasLogin] = useState(false);
 
-  /* 目前已經登入的使用者的帳密及基本資料 */
+  /* 目前已經登入的使用者的帳號與驗證碼及基本資料 */
   const [NowUserID, setNowUserID] = useState("");
   const [NowUserPassword, setNowUserPassword] = useState("");
   const [NowNickname, setNowNickname] = useState("");
@@ -66,7 +68,7 @@ function App() {
   const [NowBirthday, setNowBirthday] = useState(["", "", ""]);
   const [NowAboutMe, setNowAboutMe] = useState("");
 
-  /* OldUserPassword , NewUserPassword 為使用者改密碼時的的舊/新密碼 */
+  /* OldUserPassword , NewUserPassword 為使用者改驗證碼時的的舊/新驗證碼 */
   const [OldUserPassword, setOldUserPassword] = useState("");
   const [NewUserPassword, setNewUserPassword] = useState("");
 
@@ -96,6 +98,8 @@ function App() {
 
   /* 當前使用者的所有記帳紀錄 */
   const [MyCost, setMyCost] = useState([]);
+  //目前在哪個記帳業面
+  const [spend_p, setSpend_p] = useState(1);
   /* 當前使用者的所有備忘錄 */
   const [MemoData, setMemoData] = useState([]);
   const resetTodo = async (UserID) => {
@@ -185,6 +189,8 @@ function App() {
     } else {
       setSystemMessage("Login failed!!");
       setSystemDescription(Message);
+      setLoginUserID("");
+      setLoginUserPassword("");
       setSystemMessageType("error");
       message.error("Login fail!");
     }
@@ -221,16 +227,20 @@ function App() {
       setNowBirthday(NewBirthday);
       setNowAboutMe(NewAboutMe);
       setSystemMessage("Change PersonalInfo success !!");
+      setPageState("PersonalInfo");
+      message.success("Change PersonalInfo success !!");
+      
       setSystemDescription(Message);
       setSystemMessageType("success");
     } else {
       setSystemMessage("Change PersonalInfo failed !!");
       setSystemDescription("Some error happens !!");
+      message.success("Change Password error !!");
       setSystemMessageType("error");
     }
   };
 
-  /*修改密碼(2/4)*/
+  /*修改驗證碼(2/4)*/
   const handleChangePassword = async () => {
     console.log("FrontendNowChangePassword");
     const {
@@ -243,12 +253,16 @@ function App() {
     console.log(Message);
     if (ChangePasswordSuccess === "true") {
       setNowUserPassword(NewUserPassword);
+      setIsModalVisible_3(true);
       setSystemMessage("Change Password success !!");
       setSystemDescription(Message);
       setSystemMessageType("success");
     } else {
+      setIsModalVisible_3(true);
+      setSystemDescription(Message);
       setSystemMessage("Change Password failed !!");
       setSystemDescription("Some error happens !!");
+      message.error("Change Password error !!");
       setSystemMessageType("error");
     }
   };
@@ -273,10 +287,14 @@ function App() {
       setSystemMessage("New Cost has been created");
       setSystemDescription(Message);
       setSystemMessageType("success");
+      handleCheckMyCost(NowUserID);
+      setSpend_p(1);
     } else {
       setSystemMessage("New Cost creating failed");
       setSystemDescription("Some error happens !!");
       setSystemMessageType("error");
+      handleCheckMyCost(NowUserID);
+      setSpend_p(1);
     }
   };
 
@@ -319,6 +337,8 @@ function App() {
     setSystemMessage("Delete my cost success");
     setSystemDescription(Message);
     setSystemMessageType("info");
+    handleCheckMyCost(NowUserID);
+    setSpend_p(1);
   };
 
   /*刪除所有用戶所有記帳(2/4)*/
@@ -396,44 +416,47 @@ function App() {
     return sum(MyCost.map((e) => (!e[1] ? e[2] : 0)));
   };
 
-  //useEffect( () => { console.log( "" ) } )
-
   ///////////////////////////////////////////////////////////////////////////////
 
   //登入前歡迎頁面
   const WelcomePage = (
     <Layout.Content>
-      <div /* 輸入使用者帳號 */>
-        <p>To Login , Please Enter Your ID</p>
+      <h1 style={{ fontSize: "4rem", fontWeight: "10", textAlign: "center", lineHeight: "4rem", marginBottom: "3rem", marginTop: "3rem" }}>エムエム 2021α</h1>
+      {/* 輸入使用者帳號 */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}>
+        <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>To Login , Please Enter Your ID</p>
         <Input
+          value={LoginUserID}
           onChange={(e) => {
             setLoginUserID(e.target.value);
           }}
           placeholder="Enter your UserID"
           prefix={<UserOutlined />}
+          style={{width: "20%", marginLeft: "40%", marginBottom: "1%"}}
         />
-      </div>
-      <div /* 輸入使用者密碼 */>
-        <p>Please Enter Your Password</p>
-        <Input
+        {/* 輸入使用者驗證碼 */}
+        <p style={{width: "40%", marginLeft:"30%", textAlign: "center"}}>Please Enter Your Password</p>
+        <Input.Password
+        value={LoginUserPassword}
           onChange={(e) => {
             setLoginUserPassword(e.target.value);
           }}
           placeholder="Enter your Password"
           prefix={<UserOutlined />}
+          style={{width: "20%", marginLeft: "40%", marginBottom: "1%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
-      </div>
-      <div /* 舊用戶登入(1/4) */>
+        {/* 舊用戶登入(1/4) */}
         <Button
           onClick={handleUsersLogin}
           disabled={!LoginUserID || !LoginUserPassword}
           type="primary"
+          style={{width: "10%", marginLeft: "45%", marginBottom: "3%"}}
         >
           Login
         </Button>
-      </div>
-      <div /* 註冊按鈕 */>
-        <p>First Time To エムエム ? Please Signup First</p>
+        {/* 註冊按鈕 */}
+        <p style={{width: "40%",marginLeft:"30%", textAlign: "center"}}>First Time To エムエム ? Please Signup</p>
         <Button
           onClick={() => {
             setPageState("Signup");
@@ -448,6 +471,7 @@ function App() {
             setSystemMessageType("success");
           }}
           type="primary"
+          style={{width: "10%", marginLeft: "45%"}}
         >
           Signup
         </Button>
@@ -466,50 +490,55 @@ function App() {
   //註冊頁面
   const SignupPage = (
     <Layout.Content>
-      <p>Welcome Using our App</p>
-      <p>This is Signup Page</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Sign up</p>
       <div /* 註冊輸入帳號 */>
-        <p>Please Enter Your ID *</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your ID *</p>
         <Input
           onChange={(e) => {
             setSignupUserID(e.target.value);
           }}
           placeholder="Enter your UserId"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
-      <div /* 註冊輸入密碼 */>
-        <p>Please Enter Your Password *</p>
-        <Input
+      <div /* 註冊輸入驗證碼 */>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your Password *</p>
+        <Input.Password
+        value={SignupUserPassword}
           onChange={(e) => {
             setSignupUserPassword(e.target.value);
           }}
           placeholder="Enter your UserPassword"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
       </div>
       <div /* 註冊輸入暱稱 */>
-        <p>Please Enter Your Nickname *</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your Nickname *</p>
         <Input
           onChange={(e) => {
             setSignupNickname(e.target.value);
           }}
           placeholder="Enter your Nickname"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
       <div /* 註冊輸入學校 */>
-        <p>Please Enter Your School</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your School</p>
         <Input
           onChange={(e) => {
             setSignupSchool(e.target.value);
           }}
           placeholder="Enter your School (optional)"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
       <div /* 註冊輸入生日 */>
-        <p>Please Enter Your Birthday</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>Please Enter Your Birthday</p>
         <DatePicker
           onChange={(e) => {
             !e
@@ -521,22 +550,23 @@ function App() {
               ]);
           }}
           placeholder="Enter your Birthday (optional)"
-          style={{ width: "500px" }}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "1%"}}
         />
       </div>
 
       <div /* 註冊輸入個人簡介 */>
-        <p>We want to know you more,please enter something</p>
+        <p style={{width: "40%", marginLeft: "30%", marginBottom: "0.5%"}}>We want to know you more,please enter something</p>
         <Input.TextArea
           onChange={(e) => {
             setSignupAboutMe(e.target.value);
           }}
           placeholder="About me ... (optional)"
           rows={3}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "2%"}}
         />
       </div>
 
-      <div /* 註冊新用戶(1/4) */>
+      <Space /* 註冊新用戶(1/4) */ style={{width: "100%", display: "flex", justifyContent: "center"}}>
         <Button
           type="primary"
           onClick={handleCreateNewUser}
@@ -544,8 +574,6 @@ function App() {
         >
           Submit
         </Button>
-      </div>
-      <div /* 放棄註冊 */>
         <Button
           type="danger"
           onClick={() => {
@@ -561,7 +589,7 @@ function App() {
         >
           Go back
         </Button>
-      </div>
+      </Space>
     </Layout.Content>
   );
 
@@ -569,7 +597,7 @@ function App() {
   const PersonalInfoPage = (
     <Layout.Content>
       <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>About You</p>
-      <Descriptions bordered column={1} style={{ width: "98%", marginLeft: "1%", marginLeft: "1%" }}>
+      <Descriptions bordered column={1} style={{width: "98%", marginLeft:"1%", marginLeft:"1%"}}>
         <Descriptions.Item label="UserId">{NowUserID}</Descriptions.Item>
         <Descriptions.Item label="Password">
           {NowUserPassword}
@@ -593,64 +621,14 @@ function App() {
   //備忘錄頁面
   const MemoPage = (
     <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Memo</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Memo</p>
       <Memo user={NowUserID} axios={axios} data={MemoData}></Memo>
-    </Layout.Content>
-  );
-
-  //記帳本頁面
-  const SpendingPage = (
-    <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Spending</p>
-      <div>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={() => {
-            setPageState("NewCost");
-            setNewCostTitle("");
-            setNewCostMoney("");
-            setNewCostTag("");
-            setNewCostDay([
-              String(Date()).split(" ")[3],
-              MonthToNumber(String(Date()).split(" ")[1]),
-              String(Date()).split(" ")[2],
-            ]);
-            setNewCostIsOutcome(true);
-            setSystemMessage("You can record your income or outcome here");
-            setSystemDescription("Please enter some detail about the cost.");
-            setSystemMessageType("success");
-          }}
-          type="danger"
-        >
-          Create New Cost
-        </Button>
-      </div>
-      <div /*從資料庫取得目前使用者記帳紀錄(1/4)*/>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={() => {
-            setPageState("CheckMyCost");
-            handleCheckMyCost(NowUserID);
-          }}
-          type="primary"
-        >
-          Check My Cost
-        </Button>
-      </div>
-      <div /* 刪除個人所有記帳紀錄(1/4) */>
-        <Button
-          style={{ marginBottom: "5px", marginTop: "5px", marginLeft: "10px" }}
-          onClick={handleDeleteMyCost} type="danger">
-          Delete My Cost
-        </Button>
-      </div>
     </Layout.Content>
   );
 
   //新增一筆記帳頁面
   const NewCostPage = (
-    <Layout.Content>
-      <p>This is NewCost Page</p>
+    <Layout.Content style={{ width: '98%', margin: "1%" }}>
       <p>Please Enter Your Cost Title*</p>
       <Input
         onChange={(e) => {
@@ -658,6 +636,7 @@ function App() {
         }}
         placeholder="Enter your Cost Title"
         prefix={<AccountBookOutlined />}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Money*</p>
       <InputNumber
@@ -676,7 +655,7 @@ function App() {
           !e ? setNewCostMoney(0) : setNewCostMoney(e);
         }}
         placeholder="Enter your Cost Money"
-        style={{ width: "500px" }}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Tag</p>
       <Input
@@ -685,6 +664,7 @@ function App() {
         }}
         placeholder="Enter your Tag"
         prefix={<AimOutlined />}
+        style={{width: "80%", marginBottom: "3%"}}
       />
       <p>Please Enter Your Cost Day</p>
       <DatePicker
@@ -702,12 +682,12 @@ function App() {
             ]);
         }}
         placeholder="Enter your Cost Day, left blank is today"
-        style={{ width: "500px" }}
+        style={{width: "80%", marginBottom: "2%"}}
       />
       <div /* 新增一筆記帳(1/4) */>
         <Button
-          onClick={handleCreateNewCost}
-          type="danger"
+          onClick={() => {handleCreateNewCost();handleCheckMyCost(NowUserID);setSpend_p(1)}}
+          type="primary"
           disabled={!NewCostTitle || !NewCostMoney}
         >
           Submit
@@ -718,8 +698,20 @@ function App() {
 
   //使用者記帳紀錄頁面
   const CheckMyCostPage = (
-    <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Accouting</p>
+    <Layout.Content style={{ width: '98%', margin: "1%" }}>
+      <Alert
+        message={`Your total outcome is : ${handleTotalOutcome(MyCost)}`}
+        type="info"
+      />
+      <Alert
+        message={`Your total income is : ${handleTotalIncome(MyCost)}`}
+        type="info"
+      />
+      <Alert
+        message={`Your net debt is : ${handleTotalOutcome(MyCost) - handleTotalIncome(MyCost)
+          }`}
+        type="info"
+      />
       <Table
         columns={[
           { title: "Title", dataIndex: "title" },
@@ -752,27 +744,59 @@ function App() {
           day: `${e[4][0]}-${e[4][1]}-${e[4][2]}`,
           key: e,
         }))}
-      />
-      <Alert
-        message={`Your total outcome is : ${handleTotalOutcome(MyCost)}`}
-        type="info"
-        showIcon
-      />
-      <Alert
-        message={`Your total income is : ${handleTotalIncome(MyCost)}`}
-        type="info"
-        showIcon
-      />
-      <Alert
-        message={`Your net debt is : ${handleTotalOutcome(MyCost) - handleTotalIncome(MyCost)
-          }`}
-        type="info"
-        showIcon
+        pagination={{ pageSize: 5 }}
       />
     </Layout.Content>
   );
+  //記帳本頁面
+  const SpendingPage = (
+    <Layout.Content>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Spending</p>
+      <Space style={{margin:"1%"}}>
+        <Button
+          onClick={() => {
+            setSpend_p(0);
+            setNewCostTitle("");
+            setNewCostMoney("");
+            setNewCostTag("");
+            setNewCostDay([
+              String(Date()).split(" ")[3],
+              MonthToNumber(String(Date()).split(" ")[1]),
+              String(Date()).split(" ")[2],
+            ]);
+            setNewCostIsOutcome(true);
+            setSystemMessage("You can record your income or outcome here");
+            setSystemDescription("Please enter some detail about the cost.");
+            setSystemMessageType("success");
+          }}
+          type="primary"
+        >
+          Create New Cost
+        </Button>
+      
+      <div /*從資料庫取得目前使用者記帳紀錄(1/4)*/>
+        <Button
+          onClick={() => {
+            setSpend_p(1);
+            handleCheckMyCost(NowUserID);
+          }}
+          type="primary"
+        >
+          Check My Cost
+        </Button>
+      </div>
+      <div /* 刪除個人所有記帳紀錄(1/4) */>
+        <Button
+          onClick={() => {handleDeleteMyCost();handleCheckMyCost(NowUserID);setSpend_p(1)}} type="danger">
+          Delete My Cost
+        </Button>
+      </div>
+      </Space>
+      {spend_p == 1? CheckMyCostPage:NewCostPage}
+    </Layout.Content>
+  );
 
-  //聊天室頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
+  //聊天室頁面
   const ChatroomPage = (
     <Layout.Content>
       <p>This is Chatroom Page</p>
@@ -782,7 +806,7 @@ function App() {
   //學習功能頁面🛠️🛠️🛠️🛠️🛠️🛠️🛠️需要施工🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️🛠️
   const LearningPage = (
     <Layout.Content>
-      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0", marginTop: "0.5rem" }}>Learning</p>
+      <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "0.5rem", marginTop: "0.5rem" }}>Learning</p>
       <Learning user={NowUserID} axios={axios} data={WordData}></Learning>
     </Layout.Content>
   );
@@ -816,26 +840,27 @@ function App() {
   const ChangePersonalInfoPage = (
     <Layout.Content>
       <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Changing Personal Info</p>
-      <div /* 修改個人資料(1/4) */>
-        <p>You can change your Nickname here*</p>
+      {/* 修改個人資料(1/4) */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your Nickname here*</p>
         <Input
           onChange={(e) => {
             setNewNickname(e.target.value);
           }}
           placeholder="Enter your NewNickname"
           defaultValue={NowNickname}
-          prefix={<EyeInvisibleOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your School here</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your School here</p>
         <Input
           onChange={(e) => {
             setNewSchool(e.target.value);
           }}
           placeholder="Enter your NewSchool (optional) "
           defaultValue={NowSchool}
-          prefix={<EyeInvisibleOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your Birthday here</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your Birthday here</p>
         <DatePicker
           onChange={(e) => {
             !e
@@ -855,9 +880,9 @@ function App() {
                 "YYYY-MM-DD"
               )
           }
-          style={{ width: "500px" }}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
-        <p>You can change your own Signature!</p>
+        <p style={{width: "40%",marginLeft:"30%"}}>You can change your own Signature!</p>
         <Input.TextArea
           onChange={(e) => {
             setNewAboutMe(e.target.value);
@@ -865,11 +890,13 @@ function App() {
           placeholder="Enter your NewAboutMe (optional) "
           defaultValue={NowAboutMe}
           rows={3}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
         />
         <Button
           onClick={handleChangePersonalInfo}
           disabled={!NewNickname}
           type="primary"
+          style={{width: "16%", marginLeft: "42%"}}
         >
           Submit
         </Button>
@@ -900,32 +927,39 @@ function App() {
     </Layout.Content>
   );
 
-  //修改密碼頁面
+  //修改驗證碼頁面
   const ChangePasswordPage = (
     <Layout.Content>
       <p style={{ fontSize: "3rem", fontWeight: "100", textAlign: "center", lineHeight: "3rem", marginBottom: "1rem", marginTop: "0.5rem" }}>Change Password</p>
-      <div /* 修改密碼(1/4) */>
-        <p>Change your password here</p>
-        <p>Please your Old password </p>
-        <Input
+      {/* 修改驗證碼(1/4) */}
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", marginTop: "3rem"}}> 
+        <p style={{width: "40%",marginLeft:"30%"}}>Please enter your Old password </p>
+        <Input.Password
+          value={OldUserPassword}
           onChange={(e) => {
             setOldUserPassword(e.target.value);
           }}
           placeholder="Enter your OldPassword"
           prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
-        <p>Please your New password </p>
-        <Input
+        <p style={{width: "40%",marginLeft:"30%"}}>Please enter your New password </p>
+        <Input.Password
+          value={NewUserPassword}
           onChange={(e) => {
             setNewUserPassword(e.target.value);
           }}
           placeholder="Enter your NewPassword"
-          prefix={<EyeInvisibleOutlined />}
+          prefix={<UserOutlined />}
+          style={{width: "40%", marginLeft: "30%", marginBottom: "3%"}}
+          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
         <Button
           onClick={handleChangePassword}
           disabled={!OldUserPassword || !NewUserPassword}
           type="primary"
+          style={{width: "16%", marginLeft: "42%"}}
         >
           Submit
         </Button>
@@ -980,13 +1014,7 @@ function App() {
   const PageSider = () => {
     if (HasLogin === false) {
       return (
-        <Layout.Sider
-          collapsible
-          onCollapse={handleSiderCollapse}
-          style={{ background: "#98BAE7", height: "auto" }}
-        >
-          <p>MM_2021_Alpha</p>
-        </Layout.Sider>
+       <></>
       );
     } else {
       return (
@@ -1026,6 +1054,8 @@ function App() {
                 setSystemMessage("This is Memo Page");
                 setSystemDescription("");
                 setSystemMessageType("success");
+                //query todos
+                resetTodo(NowUserID);
               }}
               key="Memo"
               icon={<AuditOutlined />}
@@ -1050,6 +1080,7 @@ function App() {
                 setSystemMessage("This is Learning Page");
                 setSystemDescription("");
                 setSystemMessageType("success");
+                resetWord(NowUserID);
               }}
               key="Learning"
               icon={<ReadOutlined />}
@@ -1057,7 +1088,7 @@ function App() {
               Learning
             </Menu.Item>
 
-            <Menu.SubMenu /* 設定的子選單，分為一般設定（改界面和使用者基本資料）跟帳號設定（改密碼）*/
+            <Menu.SubMenu /* 設定的子選單，分為一般設定（改界面和使用者基本資料）跟帳號設定（改驗證碼）*/
               title="Setting"
               key="Setting"
               icon={<SettingOutlined />}
@@ -1147,7 +1178,7 @@ function App() {
   //底部訊息，包含系統發送給前端的任何訊息
   const PageFooter = () => {
     return (
-      <Layout.Footer style={{ background: "#B8E4F0", height: "auto" }}>
+      <Layout.Footer style={{ background: "#B8E4F0", height: "auto"}}>
         <Alert
           message={SystemMessage}
           type={SystemMessageType}
@@ -1159,13 +1190,13 @@ function App() {
   };
   //彈出式視窗
   //註冊新用戶的
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [ isModalVisible,  setIsModalVisible] = useState(false);
   const handleOk = () => {
     setIsModalVisible(false);
     setPageState("Welcome");
   };
   //登出的
-  const [isModalVisible_2, setIsModalVisible_2] = useState(false);
+  const [ isModalVisible_2,  setIsModalVisible_2] = useState(false);
   const handleOk_2 = () => {
     setIsModalVisible_2(false);
     setPageState("Welcome");
@@ -1186,20 +1217,31 @@ function App() {
   const handleCancel_2 = () => {
     setIsModalVisible_2(false);
   }
+  //改帳號與驗證碼
+  const [ isModalVisible_3,  setIsModalVisible_3] = useState(false);
+  const handleOk_3 = () => {
+    setIsModalVisible_3(false);
+    //setPageState("PersonalInfo");
+    setOldUserPassword("");
+    setNewUserPassword("");
+  };
   //回傳側邊選單+頁面內容+底部訊息
   return (
     <Layout>
       {PageSider()}
-      <Layout style={{ height: "100vh", background: "#CCDDEE" }}>
+      <Layout style={{height: "100vh", background: "#CCDDEE"}}>
         {NowPageContent()}
         {/*PageFooter()*/}
       </Layout>
-      <Modal title="System message" visible={isModalVisible} closable={false} footer={[<Button key="Got it" onClick={handleOk}>Back to login page</Button>]}>
+      <Modal title="System message" visible={isModalVisible} closable={false} footer={[<Button key="Got it" onClick={handleOk}>Got it</Button>]}>
         <h1>{SystemMessage}</h1>
       </Modal>
-      <Modal title="System message" visible={isModalVisible_2} closable={false}
-        onOk={handleOk_2} onCancel={handleCancel_2} okText={"Yes"} cancelText={"No"}>
-        <h1>Sure to signout?</h1>
+      <Modal title="System message" visible={isModalVisible_3} closable={false} footer={[<Button key="Got it" onClick={handleOk_3}>Got it</Button>]}>
+        <h1>{SystemMessage}</h1>
+      </Modal>
+      <Modal title="System message" visible={isModalVisible_2} closable={false} 
+             onOk={handleOk_2} onCancel={handleCancel_2} okText={"Yes"} cancelText={"No"}>
+        <h1>Sure to logout?</h1>
       </Modal>
     </Layout>
   );
