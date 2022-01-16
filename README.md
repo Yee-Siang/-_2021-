@@ -15,7 +15,7 @@
     - open another ternimal and go to the same dictionary and type :
         - yarn start
 
-- Introduce : エムエム 2021α is your online housekeeper! Following are its main features
+- Introduction : エムエム 2021α is your online housekeeper! Following are its main features
     - Login : login old account or create a new one.
     - Personal Info : you will be guided here after login, then you can choose other features on the left Memu.
     - Memo : help you remember tasks and schedule.
@@ -23,7 +23,7 @@
     - Learning : provide you a online dictionary, you can not only add new words but also have a little quiz at any time.
     - Setting : set your personal informantions & password.
 
-- Collabrate :
-    - 鐘郁翔 : Deploy, Video making
+- Collaboration :
+    - 鐘郁翔 : Deploy, Video making, Setting page
     - 黃政勛 : Memo page, Learning page, Frontend decoration
-    - 簡宏哲 : Login page, signup page, Spending page, Frontend structure
+    - 簡宏哲 : Login page, Signup page, Spending page, Frontend structure
