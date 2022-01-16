@@ -9,7 +9,7 @@
     - Memo : help you remember tasks and schedule.
     - Spending : record your daily spending, inculd income & outcome.
     - Learning : provide you a online dictionary, you can not only add new words but also have a little quiz at any time.
-    - Setting : set your personal informantions.
+    - Setting : set your personal informantions & password.
 
 - Usage
     - yarn install
