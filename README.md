@@ -1,5 +1,7 @@
 - Rroject name : エムエム 2021α
 
+- Github repo : https://github.com/Yee-Siang/-_2021-.git 
+
 - Contributor : 鍾郁翔、黃政勛、簡宏哲
 
 - Introduce : エムエム 2021α is your online housekeeper! Following are its main features.
